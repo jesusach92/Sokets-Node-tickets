@@ -9,7 +9,7 @@ dotenv.config()
  })
 
  io.on('connection',(socket)=>{
-     socket.broadcast.emit("USER_CONECTED", )
+     socket.broadcast.emit("USER_CONECTED",socket.id )
      console.log(`user Conected: ${socket.id} `);
      socket.on("SEND_MESSAGE",(data)=>{
          let message = {
