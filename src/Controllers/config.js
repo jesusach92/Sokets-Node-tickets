@@ -1,14 +1,19 @@
 import { connect } from "../Config/database"
 
-export const getUserTypes= async(res, req) =>{
+ const getUserTypes= async(req, res) =>{
+  try {
     const db = await connect();
     const [result] = await db.query("SELECT * FROM usertypes;")
     if(result){
         res.status(200).json(result)
     }
+    
+  } catch (error) {
+    console.log(error)  
+  }
 }
 
-export const addUserType = async (res, req)=>{
+ const addUserType = async(req, res)=>{
     try {
         const db= await connect();
         const [result] = await db.query("INSERT INTO usertypes (userType) values (?)",[
@@ -16,13 +21,37 @@ export const addUserType = async (res, req)=>{
         ])
         if(result.insertId > 0)
         {
-            res.status(200).json({messager: "Tipo de Usuario Ingresado Correctament"})
+            res.status(200).json({message: "Tipo de Usuario Ingresado Correctamente"})
         }
         else{
             res.status(500).json({message: "Error del servidor contactar a Soporte"})
         }
         db.end()
     } catch (error) {
-        res.status(400).json({message:"error del servidor contactar a soporte"})
+        console.log(error)
     }
 }
+
+const addRole = async (req, res)=>{
+    try {
+        const db = await connect();
+        const [result]= await db.query("INSERT INTO roles (nameRole) VALUES (?);",[
+            req.body.nameRole
+        ])
+        console.log(result)
+        if(result.insertId>0)
+        {
+            res.status(200).json({message:"Role Agregado Correctamente"})
+        }
+        else{
+            res.status(500).json({message:"Error en el servidor contactar a soporte"})
+        }
+        db.end()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
+export {addUserType, getUserTypes, addRole};

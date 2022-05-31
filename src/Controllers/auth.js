@@ -1,10 +1,12 @@
 import { connect } from "../Config/database";
 import { passwordCompare } from "../Helpers/BCryptPass";
 import { tokenSign, verifytoken } from "../Helpers/generateToken";
+import { validatorUserName } from "../Helpers/validatorData";
 
-export const singCtrl = async (req, res, next) => {
+export const singCtrl = async (req, res) => {
   try {
-    const db = await connect();
+    if(validatorUserName(req.body.userName))
+    {const db = await connect();
     const [[rows]] = await db.query(
       "SELECT * FROM employes WHERE BINARY userName =?;",
       [req.body.userName]
@@ -16,14 +18,20 @@ export const singCtrl = async (req, res, next) => {
       );
       if (pass) {
         const token = await tokenSign(rows);
-        res.status(200).cookie("Authorization",token).send(token);
+        res.status(200).send(token);
       } else {
-        res.status(403).send("Contraseña Incorrecta");
+        res.status(401).send("Contraseña Incorrecta");
       }
     } else {
       res.status(404).send("Usuario no encontrado");
+    }
+  }
+    else{
+      res.status(400).send("Error en formato de Usuario")
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+

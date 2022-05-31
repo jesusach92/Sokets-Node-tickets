@@ -1,3 +1,4 @@
+import { verifytoken } from "../Helpers/generateToken";
 
 export const verifyAuth = async (req, res, next) => {
     if (req.headers.authorization) {
@@ -19,13 +20,14 @@ export const verifyAuth = async (req, res, next) => {
     try {
       const token= req.headers.authorization.split(' ').pop()
       const tokenData = await verifytoken(token)
-      const role = tokenData.fkRole
-      console.log(tokenData)
-      next()
-      
+      const roleUser = tokenData.fkRole
+      console.log(role)
+      if([].concat(role).includes(roleUser)){ next()}
+      else{
+      res.status(403).send("Recurso no autorizado")
+      }
     } catch (error) {
-      res.status(403).send("No tienes permiso")
-      
+      res.status(500).send("Error de Servidor Contactar a soporte")
     }
   
   }

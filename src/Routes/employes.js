@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { addEmploye, deleteUser, getEmploye, getEmployes,  updateUser } from "../Controllers/employes";
+import { addEmploye, deleteEmploye, getEmploye, getEmployes,  updateEmploye } from "../Controllers/employes";
 import { verifyAuth, verifiyRole } from "../Middleweres/auth";
 
 const router = Router();
 
-router.get("/",verifyAuth, verifiyRole(1) , getEmployes);
+router.get("/",verifyAuth, verifiyRole([4]) , getEmployes);
 
-router.get("/:id", getEmploye);
+router.get("/:id",verifyAuth, verifiyRole, getEmploye);
 
-router.post("/", addEmploye);
+router.post("/", verifyAuth, verifiyRole([4]), addEmploye);
 
-router.put("/:id", updateUser);
+router.put("/:id", updateEmploye);
 
-router.delete("/:id", deleteUser);
+router.delete("/:id", deleteEmploye);
 
 module.exports = router;

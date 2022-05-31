@@ -11,7 +11,6 @@ const router = Router();
 
 router.get("/", verifyAuth , getConsumers);
 
-
 router.get("/:id", getConsumer);
 
 router.post("/", addConsumer);

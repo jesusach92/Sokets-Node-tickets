@@ -20,10 +20,11 @@ export const tokenSign = async (employe) => {
 
 export const verifytoken = async (token) => {
   try {
-    return await jwt.verify(token, process.env.PASS_JWT);
+    return jwt.verify(token, process.env.PASS_JWT);
   } catch (e) {
     return null;
   }
 };
 
-export const decodeSign = async (token) => {};
+export const decodeSign = async (token) => {
+};

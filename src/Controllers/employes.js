@@ -29,14 +29,14 @@ const addEmploye = async (req, res) => {
   try {
     const db = await connect();
     const passwordhash = await passwordCrypt(req.body.passwordEmploye);
-    const [result] = await db.query("CALL InEmploye(?,?,?,?,?);", [
+    const [result] = await db.query("CALL InEmploye(?,?,?,?,?,?);", [
       req.body.userName,
       req.body.nameEmploye,
       req.body.emailEmploye,
       req.body.numberEmploye,
       passwordhash,
+      req.body.fkRole
     ]);
-    console.log(result);
     res.send(result);
     db.end();
   } catch (error) {
@@ -44,12 +44,12 @@ const addEmploye = async (req, res) => {
   }
 };
 
-const updateUser = (req, res) => {
+const updateEmploye = (req, res) => {
   res.json({ user: 1, user1: 2 });
 };
 
-const deleteUser = (req, res) => {
+const deleteEmploye = (req, res) => {
   res.json({ user: 1, user1: 2 });
 };
 
-export { getEmployes, getEmploye, updateUser, deleteUser, addEmploye };
+export { getEmployes, getEmploye, deleteEmploye, updateEmploye, addEmploye };
