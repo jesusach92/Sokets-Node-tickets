@@ -27,7 +27,7 @@ Content-Type: application/json
 
 ### List Employe not Auth
 GET {{api}}/api/1.0/employes HTTP/1.1
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkFkbWluMSIsImZrUm9sZSI6NCwibmFtZUVtcGxveWUiOiJKZXN1cyBBbGJlcnRvIENhc3RpbGxvIiwiZW1haWxFbXBsb3llIjoiamVzdXMuY2FzdGlsbG9AbWFhdWFkLmNvbSIsIm51bWJlckVtcGxveWUiOiJUMDA5MDAiLCJpYXQiOjE2NTQwMjI5NzUsImV4cCI6MTY1NDAzMDE3NX0.Yu2sCqF3n5i0n6iey4nubJnzQw4CsS_csUWsAbHDBbw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkFkbWluMSIsImZrUm9sZSI6NCwibmFtZUVtcGxveWUiOiJKZXN1cyBBbGJlcnRvIENhc3RpbGxvIiwiZW1haWxFbXBsb3llIjoiamVzdXMuY2FzdGlsbG9AbWFhdWFkLmNvbSIsIm51bWJlckVtcGxveWUiOiJUMDA5MDAiLCJpYXQiOjE2NTQwMjI5NzUsImV4cCI6MTY1NDAzMDE3NX0.Yu2sCqF3n5i0n6iey4nubJnzQw4CsS_csUWsAbHDBbw
 
 ### List Employe with Auth
 GET {{api}}/api/1.0/employes HTTP/1.1
@@ -35,14 +35,15 @@ GET {{api}}/api/1.0/employes HTTP/1.1
 ### ADD Employe
 POST {{api}}/api/1.0/employes/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkFkbWluMSIsImZrUm9sZSI6NCwibmFtZUVtcGxveWUiOiJKZXN1cyBBbGJlcnRvIENhc3RpbGxvIiwiZW1haWxFbXBsb3llIjoiamVzdXMuY2FzdGlsbG9AbWFhdWFkLmNvbSIsIm51bWJlckVtcGxveWUiOiJUMDA5MDAiLCJpYXQiOjE2NTQwMjM1MDEsImV4cCI6MTY1NDAzMDcwMX0.QKa3kU2EGpXFamS_y_5oOLKzR24x7MTZpgbpws3RKQ0
 
 {
-    "userName":"Admin1",
-    "nameEmploye":"Jesus Alberto Castillo",
-    "emailEmploye":"jesus.castillo@maauad.com",
-    "numberEmploye":"T00900",
+    "userName":"User1",
+    "nameEmploye":"Jesus",
+    "emailEmploye":"jesus.cas@maauad.com",
+    "numberEmploye":"T00899",
     "passwordEmploye":"123456",
-    "fkRole": 4
+    "fkRole": 1
 }
 
 ### Login
