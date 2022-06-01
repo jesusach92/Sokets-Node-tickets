@@ -21,7 +21,6 @@ export const verifyAuth = async (req, res, next) => {
       const token= req.headers.authorization.split(' ').pop()
       const tokenData = await verifytoken(token)
       const roleUser = tokenData.fkRole
-      console.log(role)
       if([].concat(role).includes(roleUser)){ next()}
       else{
       res.status(403).send("Recurso no autorizado")

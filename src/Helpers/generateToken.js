@@ -13,7 +13,7 @@ export const tokenSign = async (employe) => {
     },
     process.env.PASS_JWT,
     {
-      expiresIn: "2h",
+      expiresIn: "1h",
     }
   );
 };

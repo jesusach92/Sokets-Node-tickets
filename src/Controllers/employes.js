@@ -29,7 +29,7 @@ const addEmploye = async (req, res) => {
   try {
     const db = await connect();
     const passwordhash = await passwordCrypt(req.body.passwordEmploye);
-    const [result] = await db.query("CALL InEmploye(?,?,?,?,?,?);", [
+    const [[result]] = await db.query("CALL InEmploye(?,?,?,?,?,?);", [
       req.body.userName,
       req.body.nameEmploye,
       req.body.emailEmploye,
@@ -45,7 +45,13 @@ const addEmploye = async (req, res) => {
 };
 
 const updateEmploye = (req, res) => {
-  res.json({ user: 1, user1: 2 });
+  try {
+    const db=await connect()
+    const passwordhash = await passwordCrypt(req.body.passwordEmploye)
+    
+  } catch (error) {
+    
+  }
 };
 
 const deleteEmploye = (req, res) => {

@@ -10,7 +10,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
-app.use("/api/1.0", require("./Routes/"));
+app.use("/", require("./Routes/"));
 
 export const server = http.createServer(app);
 export const io = new Server(server, {

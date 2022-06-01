@@ -4,14 +4,16 @@ import { verifyAuth, verifiyRole } from "../Middleweres/auth";
 
 const router = Router();
 
-router.get("/",verifyAuth, verifiyRole([4]) , getEmployes);
+router.use("/", verifyAuth)
 
-router.get("/:id",verifyAuth, verifiyRole, getEmploye);
+router.get("/", verifiyRole([4,5]) , getEmployes);
 
-router.post("/", verifyAuth, verifiyRole([4]), addEmploye);
+router.get("/:id", verifiyRole([2, 5]), getEmploye);
 
-router.put("/:id", updateEmploye);
+router.post("/", verifiyRole([4, 5]), addEmploye);
 
-router.delete("/:id", deleteEmploye);
+router.put("/:id", verifiyRole([4,2, 5]) ,updateEmploye);
+
+router.delete("/:id",verifiyRole([4,5]), deleteEmploye);
 
 module.exports = router;

@@ -4,19 +4,19 @@ import {
   deleteUser,
   getConsumer,
   getConsumers,
-  updateUser,
+  updateConsumer,
 } from "../Controllers/consumers";
-import { verifyAuth } from "../Middleweres/auth";
+import { verifiyRole, verifyAuth } from "../Middleweres/auth";
 const router = Router();
 
-router.get("/", verifyAuth , getConsumers);
+router.get("/", verifyAuth, verifiyRole([2,3,4,5]) , getConsumers);
 
-router.get("/:id", getConsumer);
+router.get("/:id",verifyAuth, verifiyRole([2,3,4,5]), getConsumer);
 
 router.post("/", addConsumer);
 
-router.put("/:id", updateUser);
+router.put("/",verifyAuth, verifiyRole([2,3,4,5]), updateConsumer);
 
-router.delete("/:id", deleteUser);
+router.delete("/:id",verifyAuth, verifiyRole([2,3,4,5]), deleteUser);
 
 module.exports = router;

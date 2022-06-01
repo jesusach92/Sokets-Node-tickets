@@ -11,6 +11,11 @@ export const validatorUserName = (text)=>{
 }
 
 export const validatorSimpleText = (text)=>{
-    const reg = /^([A-Z]([a-z0-9])*|"[A-Z]{0,1}([a-z0-9])*((\. | | & |, |-|\\|\/|! |\? |: |\t)[A-Z]{0,1}([a-z0-9])*)*")((\. | | & |, |-|\\|\/|! |\? |: |\t)[A-Z]{0,1}([a-z0-9])*| "[A-Z]{0,1}([a-z0-9])*((\. | | & |, |-|\\|\/|! |\? |: )[A-Z]{0,1}([a-z0-9])*)*(\.|!|\?){0,1}")*(\.|!|\?)$/gm
+    const reg = /[0-9\.\,\"\?\!\;\:\#\$\%\&\(\)\*\+\-\/\<\>\=\@\[\]\\\^\_\{\}\|\~]+/
+    return !reg.test(text)
+}
+
+export const validatorNumber = (text)=>{
+    const reg = /(^\d{1,10}$)/g
     return reg.test(text)
 }
