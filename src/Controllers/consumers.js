@@ -6,7 +6,13 @@ import {
   validatorUserName,
 } from "../Helpers/validatorData";
 
-const getConsumers = async (req, res) => {
+
+/**
+ * It connects to the database, queries the database, and returns the results of the query.
+ * @param req - The request object.
+ * @param res - The response object.
+ */
+export const getConsumers = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query("SELECT * FROM consumers;");
@@ -17,7 +23,13 @@ const getConsumers = async (req, res) => {
   }
 };
 
-const getConsumer = async (req, res) => {
+/**
+ * It connects to the database, queries the database for a consumer with the idConsumer =
+ * req.params.id, and returns the result as a JSON object.
+ * @param req - The request object.
+ * @param res - the response object
+ */
+export const getConsumer = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query(
@@ -31,7 +43,12 @@ const getConsumer = async (req, res) => {
   }
 };
 
-const addConsumer = async (req, res) => {
+/**
+ * It takes a name and email from a form, validates them, and then inserts them into a database
+ * @param req - The request object.
+ * @param res - the response object
+ */
+export const addConsumer = async (req, res) => {
   try {
     if (validatorSimpleText(req.body.nameConsumer)) {
       if (validatorEmail(req.body.emailConsumer)) {
@@ -53,7 +70,13 @@ const addConsumer = async (req, res) => {
   }
 };
 
-const updateConsumer = async (req, res) => {
+/**
+ * It takes a name, email, and id from the body of a request, validates the name and email, and then
+ * updates the name and email of the consumer with the given id.
+ * @param req - The request object.
+ * @param res - the response object
+ */
+export const updateConsumer = async (req, res) => {
   try {
     if (validatorSimpleText(req.body.nameConsumer)) {
       if (validatorEmail(req.body.emailConsumer)) {
@@ -76,7 +99,12 @@ const updateConsumer = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+/**
+ * It deletes a user from the database.
+ * @param req - request
+ * @param res - The response object.
+ */
+export const deleteUser = async (req, res) => {
   try {
     if(validatorNumber(req.params.id)){
     const db= await connect();
@@ -92,4 +120,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { addConsumer, getConsumer, getConsumers, updateConsumer, deleteUser };
+

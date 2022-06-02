@@ -3,6 +3,13 @@ import { passwordCompare } from "../Helpers/BCryptPass";
 import { tokenSign, verifytoken } from "../Helpers/generateToken";
 import { validatorUserName } from "../Helpers/validatorData";
 
+/**
+ * It receives a request, validates the user name, connects to the database, queries the database,
+ * compares the password, and sends a token or an error message.
+ * @param req - The request object.
+ * @param res - The response object.
+ */
+
 export const singCtrl = async (req, res) => {
   try {
     if(validatorUserName(req.body.userName))
