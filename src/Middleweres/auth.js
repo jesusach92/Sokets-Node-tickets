@@ -13,6 +13,7 @@ export const verifyAuth = async (req, res, next) => {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(" ").pop()
       const verifiy = await verifytoken(token)
+      console.log(verifiy)
       if(verifiy){
           next();
       }
@@ -52,4 +53,3 @@ export const verifyAuth = async (req, res, next) => {
     }
   
   }
-  

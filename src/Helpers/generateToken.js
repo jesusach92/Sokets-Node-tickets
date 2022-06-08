@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { RefreshToken } from "../Controllers/auth";
 dotenv.config();
 
 /**
@@ -8,19 +9,29 @@ dotenv.config();
  * @returns A promise that resolves to a string.
  */
 export const tokenSign = async (employe) => {
-  return jwt.sign(
+  const token = jwt.sign(
     {
+      fkUser: employe.fkUser,
       userName: employe.userName,
       fkRole: employe.fkRole,
-      nameEmploye: employe.nameEmploye,
-      emailEmploye: employe.emailEmploye,
-      numberEmploye: employe.numberEmploye,
     },
     process.env.PASS_JWT,
     {
-      expiresIn: "1h",
+      expiresIn: "120s",
     }
   );
+  const RefeshToken = jwt.sign(
+    {
+      fkUser: employe.fkUser,
+      userName: employe.userName,
+      fkRole: employe.fkRole,
+    },
+    process.env.PASS_JWT_REFRESH,
+    {
+      expiresIn: "2h",
+    }
+  );
+  return [token, RefeshToken];
 };
 
 /**
@@ -29,12 +40,20 @@ export const tokenSign = async (employe) => {
  * @returns The token is being returned.
  */
 export const verifytoken = async (token) => {
-  try {
+  try {  
     return jwt.verify(token, process.env.PASS_JWT);
   } catch (e) {
     return null;
   }
 };
 
-export const decodeSign = async (token) => {
+export const verifyRefreshToken = async (RefreshToken) => {
+  try { 
+    return jwt.verify(RefreshToken, process.env.PASS_JWT_REFRESH);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
+
+export const decodeSign = async (token) => {};
