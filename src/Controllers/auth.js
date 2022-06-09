@@ -21,6 +21,10 @@ const parseCookie = (str) =>
 
 export const singCtrl = async (req, res) => {
   try {
+    const RefreshTokenExist = parseCookie(req.headers.cookie)
+    if(RefreshTokenExist && RefreshTokenExist.RefreshToken){
+      DeleteSessionToken(RefreshTokenExist.RefreshToken)
+    }
     if (validatorUserName(req.body.userName)) {
       const db = await connect();
       const [[rows]] = await db.query(
