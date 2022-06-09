@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { addEmploye, asingComputer, getEmploye, getEmployes,  reasingComputer,  updateEmploye } from "../Controllers/employes";
-import { verifyAuth, verifiyRole } from "../Middleweres/auth";
+import { verifyAuth, verifiyRole,} from "../Middleweres/auth";
 
 const router = Router();
 

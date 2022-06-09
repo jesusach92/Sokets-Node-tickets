@@ -1,37 +1,52 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { RefreshToken } from "../Controllers/auth";
 dotenv.config();
+
+let RefreshTokens = [];
 
 /**
  * It takes an object and returns a token.
  * @param employe - {
  * @returns A promise that resolves to a string.
  */
+
+export const tokenRefresh = async (employe) => {
+  try {
+    const RefreshToken = jwt.sign(
+      {
+        fkUser: employe.fkUser,
+        userName: employe.userName,
+        fkRole: employe.fkRole,
+      },
+      process.env.PASS_JWT_REFRESH,
+      {
+        expiresIn: "2h",
+      }
+    );
+    RefreshTokens[RefreshToken] = { UserId: employe.fkUser };
+    return RefreshToken;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const tokenSign = async (employe) => {
-  const token = jwt.sign(
-    {
-      fkUser: employe.fkUser,
-      userName: employe.userName,
-      fkRole: employe.fkRole,
-    },
-    process.env.PASS_JWT,
-    {
-      expiresIn: "120s",
-    }
-  );
-  const RefeshToken = jwt.sign(
-    {
-      fkUser: employe.fkUser,
-      userName: employe.userName,
-      fkRole: employe.fkRole,
-    },
-    process.env.PASS_JWT_REFRESH,
-    {
-      expiresIn: "2h",
-    }
-  );
-  return [token, RefeshToken];
+  try {
+    const token = jwt.sign(
+      {
+        fkUser: employe.fkUser,
+        userName: employe.userName,
+        fkRole: employe.fkRole,
+      },
+      process.env.PASS_JWT,
+      {
+        expiresIn: "60s",
+      }
+    );
+    return token;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /**
@@ -40,7 +55,7 @@ export const tokenSign = async (employe) => {
  * @returns The token is being returned.
  */
 export const verifytoken = async (token) => {
-  try {  
+  try {
     return jwt.verify(token, process.env.PASS_JWT);
   } catch (e) {
     return null;
@@ -48,12 +63,25 @@ export const verifytoken = async (token) => {
 };
 
 export const verifyRefreshToken = async (RefreshToken) => {
-  try { 
-    return jwt.verify(RefreshToken, process.env.PASS_JWT_REFRESH);
+  try {
+    if (RefreshToken in RefreshTokens) {
+      return jwt.verify(RefreshToken, process.env.PASS_JWT_REFRESH);
+    } else {
+      return null;
+    }
   } catch (error) {
     console.log(error);
     return null;
   }
+};
+
+export const DeleteSessionToken = (RefreshToken) => {
+  console.log(RefreshTokens);
+  try {
+    if (RefreshToken in RefreshTokens) {
+      delete RefreshTokens[RefreshToken];
+    }
+  } catch (error) {}
 };
 
 export const decodeSign = async (token) => {};

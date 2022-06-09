@@ -1,4 +1,4 @@
-import { verifytoken } from "../Helpers/generateToken";
+import { RefreshTokens, verifytoken } from "../Helpers/generateToken";
 
 /**
  * It checks if the request has an authorization header, if it does, it splits the header into an
@@ -9,11 +9,11 @@ import { verifytoken } from "../Helpers/generateToken";
  * @param res - The response object.
  * @param next - This is a function that you call when you want to move on to the next middleware.
  */
+ 
 export const verifyAuth = async (req, res, next) => {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(" ").pop()
       const verifiy = await verifytoken(token)
-      console.log(verifiy)
       if(verifiy){
           next();
       }
@@ -52,4 +52,17 @@ export const verifyAuth = async (req, res, next) => {
       res.status(500).send("Error de Servidor Contactar a soporte")
     }
   
+  };
+
+export const verifySession = (req, res, next)=>{
+  try{
+  const token = req.headers.authorization.split('').pop()
+  // const session =RefreshTokens.find(session => session.token === token)
+  // console.log(session)
+  next();
+  }catch(error){
+    console.log(error)
+    res.status(403).send("Session Finalizada")
   }
+}
+  
