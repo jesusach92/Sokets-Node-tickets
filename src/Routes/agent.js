@@ -1,4 +1,4 @@
 import { Router } from "express";
-const router = Router();
+const agentRouter = Router();
 
-module.exports = router
+export default agentRouter

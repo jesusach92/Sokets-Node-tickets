@@ -1,10 +1,10 @@
-import { connect } from "../Config/database";
-import { passwordCrypt } from "../Helpers/BCryptPass";
+import { connect } from "../Config/database.js";
+import { passwordCrypt } from "../Helpers/BCryptPass.js";
 import {
   validatorEmail,
   validatorSerialNumber,
   validatorUserName,
-} from "../Helpers/validatorData";
+} from "../Helpers/validatorData.js";
 
 /**
  * It connects to the database, queries the database, and returns the results of the query.
@@ -20,6 +20,7 @@ export const getEmployes = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+  
 };
 
 /**

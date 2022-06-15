@@ -1,22 +1,22 @@
 import { Router } from "express";
-import { addEmploye, asingComputer, getEmploye, getEmployes,  reasingComputer,  updateEmploye } from "../Controllers/employes";
-import { verifyAuth, verifiyRole,} from "../Middleweres/auth";
+import { addEmploye, asingComputer, getEmploye, getEmployes,  reasingComputer,  updateEmploye } from "../Controllers/employes.js";
+import { verifyAuth, verifiyRole, verifySession,} from "../Middleweres/auth.js";
 
-const router = Router();
+const employesRouter = Router();
 
-router.use("/", verifyAuth)
+employesRouter.use("/", verifySession ,verifyAuth)
 
-router.get("/", verifiyRole([4,5]) , getEmployes);
+employesRouter.get("/", verifiyRole([4,5]) , getEmployes);
 
-router.get("/:id", verifiyRole([2, 5]), getEmploye);
+employesRouter.get("/:id", verifiyRole([2, 5]), getEmploye);
 
-router.post("/", verifiyRole([4, 5]), addEmploye);
+employesRouter.post("/", verifiyRole([4, 5]), addEmploye);
 
-router.put("/", verifiyRole([4,2, 5]) ,updateEmploye);
+employesRouter.put("/", verifiyRole([4,2, 5]) ,updateEmploye);
 
-router.post("/asing", verifiyRole([2,4,5]), asingComputer)
+employesRouter.post("/asing", verifiyRole([2,4,5]), asingComputer)
 
-router.post("/reasing", verifiyRole([2,4,5]),reasingComputer)
+employesRouter.post("/reasing", verifiyRole([2,4,5]),reasingComputer)
 
 
-module.exports = router;
+export default employesRouter;

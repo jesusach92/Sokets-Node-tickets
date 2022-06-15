@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-let RefreshTokens = [];
+
 
 /**
  * It takes an object and returns a token.
@@ -23,13 +23,11 @@ export const tokenRefresh = async (employe) => {
         expiresIn: "2h",
       }
     );
-    RefreshTokens[RefreshToken] = { UserId: employe.fkUser };
     return RefreshToken;
   } catch (error) {
     console.log(error);
   }
 };
-
 export const tokenSign = async (employe) => {
   try {
     const token = jwt.sign(
@@ -48,7 +46,6 @@ export const tokenSign = async (employe) => {
     console.log(error);
   }
 };
-
 /**
  * It takes a token and returns the decoded token if it's valid, otherwise it returns null.
  * @param token - The token to verify
@@ -64,24 +61,10 @@ export const verifytoken = async (token) => {
 
 export const verifyRefreshToken = async (RefreshToken) => {
   try {
-    if (RefreshToken in RefreshTokens) {
       return jwt.verify(RefreshToken, process.env.PASS_JWT_REFRESH);
-    } else {
-      return null;
-    }
-  } catch (error) {
+    } 
+   catch (error) {
     console.log(error);
     return null;
   }
 };
-
-export const DeleteSessionToken = (RefreshToken) => {
-  console.log(RefreshTokens);
-  try {
-    if (RefreshToken in RefreshTokens) {
-      delete RefreshTokens[RefreshToken];
-    }
-  } catch (error) {}
-};
-
-export const decodeSign = async (token) => {};

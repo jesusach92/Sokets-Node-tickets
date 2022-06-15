@@ -1,5 +1,5 @@
-import { connect } from "../Config/database";
-import { validatorPhoneNumber } from "../Helpers/validatorData";
+import { connect } from "../Config/database.js";
+import { validatorPhoneNumber } from "../Helpers/validatorData.js";
 
 /**
  * It connects to the database, queries the database, and returns the result.

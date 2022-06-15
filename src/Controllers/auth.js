@@ -1,7 +1,8 @@
-import { connect } from "../Config/database";
-import { passwordCompare } from "../Helpers/BCryptPass";
-import { DeleteSessionToken, tokenRefresh, tokenSign, verifyRefreshToken } from "../Helpers/generateToken";
-import { validatorUserName } from "../Helpers/validatorData";
+import { connect } from "../Config/database.js";
+import { passwordCompare } from "../Helpers/BCryptPass.js";
+import { tokenSign, tokenRefresh } from "../Helpers/generateToken.js";
+import { validatorUserName } from "../Helpers/validatorData.js";
+import { addSession, DeleteSessionToken, updateToken, verifyRefreshTokenMid } from "../Middleweres/auth.js";
 
 /**
  * It receives a request, validates the user name, connects to the database, queries the database,
@@ -21,7 +22,7 @@ const parseCookie = (str) =>
 
 export const singCtrl = async (req, res) => {
   try {
-    const RefreshTokenExist = parseCookie(req.headers.cookie)
+    const RefreshTokenExist =req.headers.cookie && parseCookie(req.headers.cookie)
     if(RefreshTokenExist && RefreshTokenExist.RefreshToken){
       DeleteSessionToken(RefreshTokenExist.RefreshToken)
     }
@@ -39,6 +40,7 @@ export const singCtrl = async (req, res) => {
         if (pass) {
           const RefreshToken = await tokenRefresh(rows)
           const token = await tokenSign(rows);
+          addSession(rows, token, RefreshToken)
           res
             .status(200)
             .cookie("RefreshToken", RefreshToken, {
@@ -72,7 +74,7 @@ export const RefreshToken = async (req, res) => {
   try {
     const cookies = parseCookie(req.headers.cookie);
     if (cookies.RefreshToken) {
-      const validate = await verifyRefreshToken(cookies.RefreshToken);
+      const validate = await verifyRefreshTokenMid(cookies.RefreshToken);
       if (validate) {
         const token = await tokenSign(validate);
         const db = await connect();
@@ -81,6 +83,7 @@ export const RefreshToken = async (req, res) => {
         ] = await db.query("SELECT * FROM employes WHERE fkUser= ?", [
           validate.fkUser,
         ]);
+        updateToken(validate.fkUser, token)
         res
           .status(200)
           .json({
@@ -111,6 +114,7 @@ export const Logout = async (req, res) =>{
     const {RefreshToken}= parseCookie(req.headers.cookie)
     DeleteSessionToken(RefreshToken)
     res.status(203).send("I hope You have a good day")
+
   } catch (error) {
     console.log(error)
     res.status(404).send("Algo anda mal vuelve a iniciar sesion")

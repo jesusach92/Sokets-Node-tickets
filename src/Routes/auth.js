@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { Logout, logOut, RefreshToken, singCtrl } from "../Controllers/auth";
-const router = Router();
+import { Logout, RefreshToken, singCtrl } from "../Controllers/auth.js";
+const authRouter = Router();
 
 /* A route that is being created. */
-router.post("/login", singCtrl);
+authRouter.post("/login", singCtrl);
 
-router.get("/Update", RefreshToken);
+authRouter.get("/Update", RefreshToken);
 
-router.put("/logout",Logout)
+authRouter.put("/logout",Logout)
 
-module.exports = router;
+export default authRouter;

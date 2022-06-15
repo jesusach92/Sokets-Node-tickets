@@ -5,18 +5,18 @@ import {
   getConsumer,
   getConsumers,
   updateConsumer,
-} from "../Controllers/consumers";
-import { verifiyRole, verifyAuth } from "../Middleweres/auth";
-const router = Router();
+} from "../Controllers/consumers.js";
+import { verifiyRole, verifyAuth } from "../Middleweres/auth.js";
+const consumersRouter = Router();
 
-router.get("/", verifyAuth, verifiyRole([2,3,4,5]) , getConsumers);
+consumersRouter.get("/", verifyAuth, verifiyRole([2,3,4,5]) , getConsumers);
 
-router.get("/:id",verifyAuth, verifiyRole([2,3,4,5]), getConsumer);
+consumersRouter.get("/:id",verifyAuth, verifiyRole([2,3,4,5]), getConsumer);
 
-router.post("/", addConsumer);
+consumersRouter.post("/", addConsumer);
 
-router.put("/",verifyAuth, verifiyRole([2,3,4,5]), updateConsumer);
+consumersRouter.put("/",verifyAuth, verifiyRole([2,3,4,5]), updateConsumer);
 
-router.delete("/:id",verifyAuth, verifiyRole([2,3,4,5]), deleteUser);
+consumersRouter.delete("/:id",verifyAuth, verifiyRole([2,3,4,5]), deleteUser);
 
-module.exports = router;
+export default consumersRouter;

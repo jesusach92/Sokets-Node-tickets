@@ -1,10 +1,10 @@
-import { connect } from "../Config/database";
+import { connect } from "../Config/database.js";
 import {
   validatorEmail,
   validatorNumber,
   validatorSimpleText,
   validatorUserName,
-} from "../Helpers/validatorData";
+} from "../Helpers/validatorData.js";
 
 
 /**

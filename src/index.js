@@ -1,4 +1,4 @@
-import { io, server } from "./app";
+import { io, server } from "./app.js";
 import dotenv from "dotenv";
 
 dotenv.config()

@@ -1,4 +1,4 @@
-import { RefreshTokens, verifytoken } from "../Helpers/generateToken";
+import { verifytoken, verifyRefreshToken } from "../Helpers/generateToken.js";
 
 /**
  * It checks if the request has an authorization header, if it does, it splits the header into an
@@ -9,10 +9,40 @@ import { RefreshTokens, verifytoken } from "../Helpers/generateToken";
  * @param res - The response object.
  * @param next - This is a function that you call when you want to move on to the next middleware.
  */
- 
+
+ let RefreshTokens = [];
+
+export const addSession = (employe, token, RefreshToken)=>{
+  RefreshTokens = [...RefreshTokens,{ RefreshToken,UserId: employe.fkUser, token }];
+}
+
+export const updateToken = (fkUser, token) =>{
+  RefreshTokens.map((element, index)=>{
+    element.UserId === fkUser ? RefreshTokens[index] = {...element, token: token} :""
+  })
+}
+
+export const verifyRefreshTokenMid = async (RefreshToken)=>{
+  const exist =  RefreshTokens.find(Element => Element.RefreshToken === RefreshToken) 
+    if (exist) {
+      return await verifyRefreshToken(RefreshToken)
+    }
+    else return null
+
+}
+
+export const DeleteSessionToken = (RefreshToken) => {
+  try {
+    RefreshTokens.find((Element, index) => Element.RefreshToken === RefreshToken ? RefreshTokens.splice(index):"")
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 export const verifyAuth = async (req, res, next) => {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(" ").pop()
+
       const verifiy = await verifytoken(token)
       if(verifiy){
           next();
@@ -56,13 +86,19 @@ export const verifyAuth = async (req, res, next) => {
 
 export const verifySession = (req, res, next)=>{
   try{
-  const token = req.headers.authorization.split('').pop()
-  // const session =RefreshTokens.find(session => session.token === token)
-  // console.log(session)
-  next();
+  const token = req.headers.authorization.split(' ').pop()
+  if(token){
+  const session =RefreshTokens && RefreshTokens.find(session => session.token === token )
+  if(session){
+    next();
+  }
+  else{
+    res.status(403).send("Sesion Finalizada vuelve a iniciar sesion")
+  }
+  }
   }catch(error){
     console.log(error)
-    res.status(403).send("Session Finalizada")
+    res.status(403).send("Sesion Finalizada")
   }
 }
   
