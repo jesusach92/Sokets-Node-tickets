@@ -1,7 +1,7 @@
 import { connect } from "../Config/database.js";
 import { passwordCompare } from "../Helpers/BCryptPass.js";
 import { tokenSign, tokenRefresh } from "../Helpers/generateToken.js";
-import { validatorUserName } from "../Helpers/validatorData.js";
+import { validatorEmail } from "../Helpers/validatorData.js";
 import { addSession, DeleteSessionToken, updateToken, verifyRefreshTokenMid } from "../Middleweres/auth.js";
 
 /**
@@ -26,11 +26,11 @@ export const singCtrl = async (req, res) => {
     if(RefreshTokenExist && RefreshTokenExist.RefreshToken){
       DeleteSessionToken(RefreshTokenExist.RefreshToken)
     }
-    if (validatorUserName(req.body.userName)) {
+    if (validatorEmail(req.body.emailEmploye)) {
       const db = await connect();
       const [[rows]] = await db.query(
-        "SELECT * FROM employes WHERE BINARY userName =?;",
-        [req.body.userName]
+        "SELECT * FROM employes WHERE BINARY emailEmploye =?;",
+        [req.body.emailEmploye]
       );
       if (rows?.idemploye) {
         const pass = await passwordCompare(
@@ -67,6 +67,7 @@ export const singCtrl = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(404).send("Ha ocurrido un erro")
   }
 };
 

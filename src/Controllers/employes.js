@@ -144,3 +144,13 @@ export const reasingComputer= async(req, res)=>{
     res.status(400).send("Ha ocurrido un error")
   }
 }
+
+export const imageProfile = async(req, res) =>{
+  try {
+    
+
+  } catch (error) {
+    res.status(415).send("Error al cargar el archivo")
+    
+  }
+}

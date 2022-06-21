@@ -5,7 +5,7 @@ const authRouter = Router();
 /* A route that is being created. */
 authRouter.post("/login", singCtrl);
 
-authRouter.get("/Update", RefreshToken);
+authRouter.get("/update", RefreshToken);
 
 authRouter.put("/logout",Logout)
 
