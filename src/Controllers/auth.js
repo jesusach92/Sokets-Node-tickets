@@ -2,7 +2,12 @@ import { connect } from "../Config/database.js";
 import { passwordCompare } from "../Helpers/BCryptPass.js";
 import { tokenSign, tokenRefresh } from "../Helpers/generateToken.js";
 import { validatorEmail } from "../Helpers/validatorData.js";
-import { addSession, DeleteSessionToken, updateToken, verifyRefreshTokenMid } from "../Middleweres/auth.js";
+import {
+  addSession,
+  DeleteSessionToken,
+  updateToken,
+  verifyRefreshTokenMid,
+} from "../Middleweres/auth.js";
 
 /**
  * It receives a request, validates the user name, connects to the database, queries the database,
@@ -12,7 +17,7 @@ import { addSession, DeleteSessionToken, updateToken, verifyRefreshTokenMid } fr
  */
 
 const parseCookie = (str) =>
-  str
+ str
     .split(";")
     .map((v) => v.split("="))
     .reduce((acc, v) => {
@@ -22,9 +27,10 @@ const parseCookie = (str) =>
 
 export const singCtrl = async (req, res) => {
   try {
-    const RefreshTokenExist =req.headers.cookie && parseCookie(req.headers.cookie)
-    if(RefreshTokenExist && RefreshTokenExist.RefreshToken){
-      DeleteSessionToken(RefreshTokenExist.RefreshToken)
+    const RefreshTokenExist =
+      req.headers.cookie && parseCookie(req.headers.cookie);
+    if (RefreshTokenExist && RefreshTokenExist.RefreshToken) {
+      DeleteSessionToken(RefreshTokenExist.RefreshToken);
     }
     if (validatorEmail(req.body.emailEmploye)) {
       const db = await connect();
@@ -38,13 +44,12 @@ export const singCtrl = async (req, res) => {
           rows.passwordEmploye
         );
         if (pass) {
-          const RefreshToken = await tokenRefresh(rows)
+          const RefreshToken = await tokenRefresh(rows);
           const token = await tokenSign(rows);
-          addSession(rows, token, RefreshToken)
+          addSession(rows, token, RefreshToken);
           res
             .status(200)
             .cookie("RefreshToken", RefreshToken, {
-              httpOnly: true,
               maxAge: 7200000,
             })
             .json({
@@ -67,12 +72,13 @@ export const singCtrl = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(404).send("Ha ocurrido un erro")
+    res.status(404).send("Ha ocurrido un erro");
   }
 };
 
 export const RefreshToken = async (req, res) => {
   try {
+    console.log(req.headers)
     const cookies = parseCookie(req.headers.cookie);
     if (cookies.RefreshToken) {
       const validate = await verifyRefreshTokenMid(cookies.RefreshToken);
@@ -84,22 +90,19 @@ export const RefreshToken = async (req, res) => {
         ] = await db.query("SELECT * FROM employes WHERE fkUser= ?", [
           validate.fkUser,
         ]);
-        updateToken(validate.fkUser, token)
-        res
-          .status(200)
-          .json({
-            token,
-            idemploye,
-            nameEmploye,
-            emailEmploye,
-            numberEmploye,
-            fkRole,
-          });
-
+        updateToken(validate.fkUser, token);
+        res.status(200).json({
+          token,
+          idemploye,
+          nameEmploye,
+          emailEmploye,
+          numberEmploye,
+          fkRole,
+        });
         db.end();
       } else {
-        DeleteSessionToken(cookies.RefreshToken)
-        res.status(400).send("Token Invalido Inicia sesion nuevamente");
+        DeleteSessionToken(cookies.RefreshToken);
+        res.status(401).send("Token Invalido Inicia sesion nuevamente");
       }
     } else {
       res.status(403).send("No estas autorizado para está operacion");
@@ -110,14 +113,13 @@ export const RefreshToken = async (req, res) => {
   }
 };
 
-export const Logout = async (req, res) =>{
+export const Logout = async (req, res) => {
   try {
-    const {RefreshToken}= parseCookie(req.headers.cookie)
-    DeleteSessionToken(RefreshToken)
-    res.status(203).send("I hope You have a good day")
-
+    const { RefreshToken } = parseCookie(req.headers.cookie);
+    DeleteSessionToken(RefreshToken);
+    res.status(203).send("I hope You have a good day");
   } catch (error) {
-    console.log(error)
-    res.status(404).send("Algo anda mal vuelve a iniciar sesion")
+    console.log(error);
+    res.status(404).send("Algo anda mal vuelve a iniciar sesion");
   }
 };

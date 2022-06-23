@@ -28,7 +28,6 @@ export const verifyRefreshTokenMid = async (RefreshToken)=>{
       return await verifyRefreshToken(RefreshToken)
     }
     else return null
-
 }
 
 export const DeleteSessionToken = (RefreshToken) => {
