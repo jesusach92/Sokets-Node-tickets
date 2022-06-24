@@ -17,7 +17,7 @@ import {
  */
 
 const parseCookie = (str) =>
- str
+str
     .split(";")
     .map((v) => v.split("="))
     .reduce((acc, v) => {
@@ -27,9 +27,8 @@ const parseCookie = (str) =>
 
 export const singCtrl = async (req, res) => {
   try {
-    const RefreshTokenExist =
-      req.headers.cookie && parseCookie(req.headers.cookie);
-    if (RefreshTokenExist && RefreshTokenExist.RefreshToken) {
+    const RefreshTokenExist =req.headers.cookie && parseCookie(req.headers.cookie)
+    if (RefreshTokenExist?.RefreshToken) {
       DeleteSessionToken(RefreshTokenExist.RefreshToken);
     }
     if (validatorEmail(req.body.emailEmploye)) {
@@ -50,7 +49,8 @@ export const singCtrl = async (req, res) => {
           res
             .status(200)
             .cookie("RefreshToken", RefreshToken, {
-              maxAge: 7200000,
+              httpOnly:true,
+              maxAge:7200000
             })
             .json({
               token,
@@ -78,9 +78,8 @@ export const singCtrl = async (req, res) => {
 
 export const RefreshToken = async (req, res) => {
   try {
-    console.log(req.headers)
-    const cookies = parseCookie(req.headers.cookie);
-    if (cookies.RefreshToken) {
+    const cookies =req.headers.cookie && parseCookie( req.headers.cookie);
+    if (cookies?.RefreshToken) {
       const validate = await verifyRefreshTokenMid(cookies.RefreshToken);
       if (validate) {
         const token = await tokenSign(validate);
@@ -115,7 +114,7 @@ export const RefreshToken = async (req, res) => {
 
 export const Logout = async (req, res) => {
   try {
-    const { RefreshToken } = parseCookie(req.headers.cookie);
+    const { RefreshToken } = parseCookie(req.headers.cookie) || "";
     DeleteSessionToken(RefreshToken);
     res.status(203).send("I hope You have a good day");
   } catch (error) {
