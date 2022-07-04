@@ -12,8 +12,8 @@ import { verifytoken, verifyRefreshToken } from "../Helpers/generateToken.js";
 
  let RefreshTokens = [];
 
-export const addSession = (employe, token, RefreshToken)=>{
-  RefreshTokens = [...RefreshTokens,{ RefreshToken,UserId: employe.fkUser, token }];
+export const addSession = (user, token, RefreshToken)=>{
+  RefreshTokens = [...RefreshTokens,{ RefreshToken,UserId: user.fkUser, token }];
 }
 
 export const updateToken = (fkUser, token) =>{

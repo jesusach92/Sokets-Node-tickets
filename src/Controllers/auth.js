@@ -1,3 +1,4 @@
+import e from "express";
 import { connect } from "../Config/database.js";
 import { passwordCompare } from "../Helpers/BCryptPass.js";
 import { tokenSign, tokenRefresh } from "../Helpers/generateToken.js";
@@ -8,6 +9,8 @@ import {
   updateToken,
   verifyRefreshTokenMid,
 } from "../Middleweres/auth.js";
+import { getConsumerById } from "./consumers.js";
+import { getEmployeById } from "./employes.js";
 
 /**
  * It receives a request, validates the user name, connects to the database, queries the database,
@@ -17,7 +20,7 @@ import {
  */
 
 const parseCookie = (str) =>
-str
+  str
     .split(";")
     .map((v) => v.split("="))
     .reduce((acc, v) => {
@@ -27,77 +30,138 @@ str
 
 export const singCtrl = async (req, res) => {
   try {
-    const RefreshTokenExist =req.headers.cookie && parseCookie(req.headers.cookie)
+    const RefreshTokenExist =
+      req.headers.cookie && parseCookie(req.headers.cookie);
     if (RefreshTokenExist?.RefreshToken) {
       DeleteSessionToken(RefreshTokenExist.RefreshToken);
     }
-    if (validatorEmail(req.body.emailEmploye)) {
+    if (validatorEmail(req.body.email)) {
       const db = await connect();
       const [[rows]] = await db.query(
-        "SELECT * FROM employes WHERE BINARY emailEmploye =?;",
-        [req.body.emailEmploye]
+        "SELECT * FROM users WHERE BINARY email =?;",
+        [req.body.email]
       );
-      if (rows?.idemploye) {
-        const pass = await passwordCompare(
-          req.body.passwordEmploye,
-          rows.passwordEmploye
-        );
-        if (pass) {
-          const RefreshToken = await tokenRefresh(rows);
-          const token = await tokenSign(rows);
-          addSession(rows, token, RefreshToken);
-          res
-            .status(200)
-            .cookie("RefreshToken", RefreshToken, {
-              httpOnly:true,
-              maxAge:7200000
-            })
-            .json({
-              token,
-              idemploye: rows.idemploye,
-              nameEmploye: rows.nameEmploye,
-              emailEmploye: rows.emailEmploye,
-              numberEmploye: rows.numberEmploye,
-              fkRole: rows.fkRole,
+      switch (rows?.fkUserType) {
+        case 1:
+          const [consumer] = await getConsumerById(rows.idUser);
+          const passConsumer = await passwordCompare(
+            req.body.password,
+            consumer.passwordConsumer
+          );
+          if (passConsumer) {
+            const RefreshToken = await tokenRefresh({
+              idUser: consumer.fkUser,
+			  type: rows.fkUserType,
+              email: consumer.emailConsumer,
             });
-        } else {
-          res.status(401).send("Contraseña Incorrecta");
-        }
-      } else {
-        res.status(404).send("Usuario no encontrado");
+            const token = await tokenSign({
+              idUser: consumer.fkUser,
+              email: consumer.emailConsumer,
+            });
+            addSession(consumer, token, RefreshToken);
+            res
+              .status(200)
+              .cookie("RefreshToken", RefreshToken, {
+                httpOnly: true,
+                maxAge: 7200000,
+              })
+              .json({
+                token,
+				type: rows.fkUserType,
+                nameUser: consumer.nameConsumer,
+                email: consumer.emailConsumer,
+              });
+          } else {
+            res.status(404).send("Revisa tus credenciales");
+          }
+          break;
+        case 2:
+          const [employe] = await getEmployeById(rows.idUser);
+          const passEmploye = await passwordCompare(
+            req.body.password,
+            employe.passwordEmploye
+          );
+          if (passEmploye) {
+            const RefreshToken = await tokenRefresh({
+              idUser: employe.fkUser,
+			        type: rows.fkUserType,
+              email: employe.emailEmploye,
+            });
+            const token = await tokenSign({
+              idUser: employe.fkUer,
+              email: employe.emailEmploye,
+            });
+            addSession(employe, token, RefreshToken);
+            res
+              .status(200)
+              .cookie("RefreshToken", RefreshToken, {
+                httpOnly: true,
+                maxAge: 7200000,
+              })
+              .json({
+                token,
+				type: rows.fkUserType,
+                nameUser: employe.nameEmploye,
+                email: employe.emailEmploye,
+                numberEmploye: employe.numberEmploye,
+                fkRole: employe.fkRole,
+              });
+          } else {
+            res.status(404).send("Revisa tus credenciales");
+          }
+          break;
+        default:
+          res.status(404).json({ message: "Revisa tus credenciales" });
+          break;
       }
       db.end();
     } else {
-      res.status(400).send("Error en formato de Usuario");
+      res.status(400).send("Revisa tus credenciales");
     }
   } catch (error) {
     console.log(error);
-    res.status(404).send("Ha ocurrido un erro");
+    res.status(404).send("Ha ocurrido un error");
   }
 };
 
 export const RefreshToken = async (req, res) => {
   try {
-    const cookies =req.headers.cookie && parseCookie( req.headers.cookie);
+    const cookies = req.headers.cookie && parseCookie(req.headers.cookie);
     if (cookies?.RefreshToken) {
       const validate = await verifyRefreshTokenMid(cookies.RefreshToken);
       if (validate) {
-        const token = await tokenSign(validate);
+        const {user}=validate
+        const token = await tokenSign({idUser:user.idUser, email:user.email});
         const db = await connect();
-        const [
-          [{ idemploye, nameEmploye, emailEmploye, numberEmploye, fkRole }],
-        ] = await db.query("SELECT * FROM employes WHERE fkUser= ?", [
-          validate.fkUser,
-        ]);
-        updateToken(validate.fkUser, token);
+		switch(user.type){
+			case 1:
+			const [[{nameConsumer, emailConsumer}]] = await db.query("SELECT nameConsumer, emailConsumer FROM consumers WHERE fkUser=?",[
+				user.idUser
+			])
+			updateToken(user.idUser, token)
+			res.status(200).json({
+				token,type: user.type, nameUser:nameConsumer,email:emailConsumer
+			})
+			break;
+			case 2:
+		const [[{ nameEmploye, emailEmploye, numberEmploye, fkRole }]] =
+          await db.query("SELECT * FROM employes WHERE fkUser= ?", [
+            user.idUser,
+          ]);
+        updateToken(user.idUser, token);
         res.status(200).json({
           token,
-          idemploye,
-          nameEmploye,
-          emailEmploye,
+		  type: user.type,
+          nameUser: nameEmploye,
+          email: emailEmploye,
           numberEmploye,
           fkRole,
         });
+			break;
+      default:
+        res.status(400).send("Algo anda mal")
+        break;
+		}
         db.end();
       } else {
         DeleteSessionToken(cookies.RefreshToken);

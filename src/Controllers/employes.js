@@ -32,7 +32,7 @@ export const getEmployes = async (req, res) => {
 export const getEmploye = async (req, res) => {
   try {
     const db = await connect();
-    const [rows] = await db.query("SELECT * FROM users WHERE idUSer = ?;", [
+    const [rows] = await db.query("SELECT * FROM employes WHERE fkUser = ?;", [
       req.params.id,
     ]);
     res.json(rows);
@@ -41,6 +41,20 @@ export const getEmploye = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getEmployeById = async (fkUer) =>{
+  try {
+    const db= await connect();
+    const [rows]= await db.query("SELECT * FROM employes WHERE fkUser=?;",[
+      fkUer
+    ])
+    db.end()
+    return rows
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
 
 /**
  * It takes a request, validates the request, and then sends a response
@@ -103,6 +117,7 @@ export const updateEmploye = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).send("Error de sistema contacta a tu administrador")
   }
 };
 

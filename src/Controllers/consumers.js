@@ -3,9 +3,8 @@ import {
   validatorEmail,
   validatorNumber,
   validatorSimpleText,
-  validatorUserName,
 } from "../Helpers/validatorData.js";
-
+import { passwordCrypt } from "../Helpers/BCryptPass.js";
 
 /**
  * It connects to the database, queries the database, and returns the results of the query.
@@ -43,6 +42,22 @@ export const getConsumer = async (req, res) => {
   }
 };
 
+export const getConsumerById = async (fkUser)=>{
+  try {
+    const db = await connect();
+    const [rows]= await db.query("SELECT * FROM consumers WHERE fkUser=?;",[
+      fkUser
+    ])
+    db.end();
+    return rows
+    
+  } catch (error) {
+    console.log(error);
+    return error
+    
+  }
+}
+
 /**
  * It takes a name and email from a form, validates them, and then inserts them into a database
  * @param req - The request object.
@@ -52,10 +67,12 @@ export const addConsumer = async (req, res) => {
   try {
     if (validatorSimpleText(req.body.nameConsumer)) {
       if (validatorEmail(req.body.emailConsumer)) {
+        const passwordHash = await passwordCrypt(req.body.passwordConsumer)
         const db = await connect();
-        const [[result]] = await db.query("CALL InConsumer(?,?);", [
+        const [[result]] = await db.query("CALL InConsumer(?,?,?);", [
           req.body.nameConsumer,
           req.body.emailConsumer,
+          passwordHash
         ]);
         res.send(result);
         db.end();
@@ -117,6 +134,7 @@ export const deleteUser = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).send("comunicate con tu administrador de sistema")
   }
 };
 

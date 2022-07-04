@@ -10,13 +10,11 @@ dotenv.config();
  * @returns A promise that resolves to a string.
  */
 
-export const tokenRefresh = async (employe) => {
+export const tokenRefresh = async (user) => {
   try {
     const RefreshToken = jwt.sign(
       {
-        fkUser: employe.fkUser,
-        userName: employe.userName,
-        fkRole: employe.fkRole,
+        user
       },
       process.env.PASS_JWT_REFRESH,
       {
@@ -28,13 +26,11 @@ export const tokenRefresh = async (employe) => {
     console.log(error);
   }
 };
-export const tokenSign = async (employe) => {
+export const tokenSign = async (user) => {
   try {
     const token = jwt.sign(
       {
-        fkUser: employe.fkUser,
-        userName: employe.userName,
-        fkRole: employe.fkRole,
+        user
       },
       process.env.PASS_JWT,
       {

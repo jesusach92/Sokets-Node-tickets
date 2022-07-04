@@ -61,7 +61,7 @@ export const addRole = async (req, res) => {
     );
     console.log(result);
     if (result.insertId > 0) {
-      res.status(200).json({ message: "Role Agregado Correctamente" });
+      res.status(200).json({ message: "Rol Agregado Correctamente" });
     } else {
       res
         .status(500)
