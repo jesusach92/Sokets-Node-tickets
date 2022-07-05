@@ -17,7 +17,8 @@ export const getConsumers = async (req, res) => {
     const [rows] = await db.query("SELECT * FROM consumers;");
     res.json(rows);
     db.end();
-  } catch (error) {
+  } catch (error) {3.
+    res.send(404).send("Ha ocurrido un error")
     console.log(error);
   }
 };
@@ -38,6 +39,7 @@ export const getConsumer = async (req, res) => {
     res.json(rows);
     db.end();
   } catch (error) {
+    res.send(404).send("Ha ocurrido un error")
     console.log(error);
   }
 };
@@ -52,6 +54,7 @@ export const getConsumerById = async (fkUser)=>{
     return rows
     
   } catch (error) {
+    res.send(404).send("Ha ocurrido un error")
     console.log(error);
     return error
     
@@ -65,16 +68,16 @@ export const getConsumerById = async (fkUser)=>{
  */
 export const addConsumer = async (req, res) => {
   try {
-    if (validatorSimpleText(req.body.nameConsumer)) {
-      if (validatorEmail(req.body.emailConsumer)) {
-        const passwordHash = await passwordCrypt(req.body.passwordConsumer)
+    if (validatorSimpleText(req.body.nameUser)) {
+      if (validatorEmail(req.body.email)) {
+        const passwordHash = await passwordCrypt(req.body.password)
         const db = await connect();
         const [[result]] = await db.query("CALL InConsumer(?,?,?);", [
-          req.body.nameConsumer,
-          req.body.emailConsumer,
+          req.body.nameUser,
+          req.body.email,
           passwordHash
         ]);
-        res.send(result);
+        res.status(202).send(result);
         db.end();
       } else {
         res.status(400).send("Correo Electronico no Valido");
@@ -83,6 +86,7 @@ export const addConsumer = async (req, res) => {
       res.status(400).send("Nombre no Valido");
     }
   } catch (error) {
+    res.send(404).send("Ha ocurrido un error")
     console.log(error);
   }
 };
@@ -95,16 +99,18 @@ export const addConsumer = async (req, res) => {
  */
 export const updateConsumer = async (req, res) => {
   try {
-    if (validatorSimpleText(req.body.nameConsumer)) {
-      if (validatorEmail(req.body.emailConsumer)) {
+    if (validatorSimpleText(req.body.nameUser)) {
+      if (validatorEmail(req.body.email)) {
+        const passwordHash = await passwordCrypt(req.body.password)
         const db = await connect();
-        const [[result]] = await db.query("Call UpdateConsumer(?,?,?);", [
-          req.body.nameConsumer,
-          req.body.emailConsumer,
-          req.body.IdConsumer,
+        const [[[result]]] = await db.query("Call UpdateConsumer(?,?,?,?);", [
+          req.body.nameUser,
+          req.body.email,
+          passwordHash,
+          req.body.idUser,
         ]);
         db.end();
-        res.status(200).send(result);
+        res.status(202).send(result);
       } else {
         res.status(400).send("Correo no Valido");
       }

@@ -88,8 +88,9 @@ export const singCtrl = async (req, res) => {
               email: employe.emailEmploye,
             });
             const token = await tokenSign({
-              idUser: employe.fkUer,
+              idUser: employe.fkUser,
               email: employe.emailEmploye,
+              fkRole: employe.fkRole
             });
             addSession(employe, token, RefreshToken);
             res
@@ -111,7 +112,7 @@ export const singCtrl = async (req, res) => {
           }
           break;
         default:
-          res.status(404).json({ message: "Revisa tus credenciales" });
+          res.status(404).send( "Revisa tus credenciales");
           break;
       }
       db.end();
