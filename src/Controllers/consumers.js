@@ -17,7 +17,7 @@ export const getConsumers = async (req, res) => {
     const [rows] = await db.query("SELECT * FROM consumers;");
     res.json(rows);
     db.end();
-  } catch (error) {3.
+  } catch (error) {
     res.send(404).send("Ha ocurrido un error")
     console.log(error);
   }

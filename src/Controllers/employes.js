@@ -121,44 +121,6 @@ export const updateEmploye = async (req, res) => {
   }
 };
 
-/**
- * It takes a serial number and an employee id, and if the serial number is valid, it inserts the
- * serial number and employee id into the computers table.
- * @param req - The request object.
- * @param res - the response object
- */
-export const asingComputer = async (req, res) => {
-  try {
-    if (validatorSerialNumber(req.body.serialNumber)) {
-      const db = await connect();
-      const result = await db.query(
-        "INSERT INTO computers(serialNumber,fkEmploye) VALUES (?,?);",
-        [req.body.serialNumber, req.body.idEmploye]
-      );
-      res.status(200).send(result);
-      db.end();
-    } else {
-      res.status(400).send("Numero de serie incorrecto");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const reasingComputer= async(req, res)=>{
-  try {
-    const db = await connect();
-    const result= await db.query("UPDATE computers SET fkEmploye = ? WHERE idComputer = ?;",[
-      req.body.fkEmploye,
-      req.body.idComputer
-    ])
-    res.status(200).send("Reasignacion realizada correctamente");
-    db.end();
-  } catch (error) {
-    console.log(error)
-    res.status(400).send("Ha ocurrido un error")
-  }
-}
 
 export const imageProfile = async(req, res) =>{
   try {

@@ -1,5 +1,7 @@
 import { connect } from "../Config/database.js";
-import { validatorPhoneNumber } from "../Helpers/validatorData.js";
+import {
+  validatorSimpleText,
+} from "../Helpers/validatorData.js";
 
 /**
  * It connects to the database, queries the database, and returns the result.
@@ -34,11 +36,11 @@ export const addUserType = async (req, res) => {
     if (result.insertId > 0) {
       res
         .status(200)
-        .json({ message: "Tipo de Usuario Ingresado Correctamente" });
+        .send("Informacion Agregada Correctamente");
     } else {
       res
         .status(500)
-        .json({ message: "Error del servidor contactar a Soporte" });
+        .send("Error del servidor contactar a Soporte");
     }
     db.end();
   } catch (error) {
@@ -61,11 +63,11 @@ export const addRole = async (req, res) => {
     );
     console.log(result);
     if (result.insertId > 0) {
-      res.status(200).json({ message: "Rol Agregado Correctamente" });
+      res.status(200).send("Informacion Agregada Correctamente");
     } else {
       res
         .status(500)
-        .json({ message: "Error en el servidor contactar a soporte" });
+        .send("Error en el servidor contactar a soporte");
     }
     db.end();
   } catch (error) {
@@ -73,33 +75,28 @@ export const addRole = async (req, res) => {
   }
 };
 
-
 /**
  * It's a function that adds a phone number to a database.
  * @param req - request
  * @param res - the response object
  */
-export const addPhone = async (req, res) => {
+
+export const addArea = async (req, res) => {
   try {
-    if (validatorPhoneNumber(req.body.numberPhone)) {
-      const number = req.body.numberPhone.replace(/ /g,"")
+    if (validatorSimpleText(req.body.nameArea)) {
       const db = await connect();
-      const [result] = await db.query(
-        "INSERT INTO phones (numberPhone, typeNumber, fkUser) VALUES (?,?,?);",
-        [number, req.body.typeNumber, req.body.fkUser]
-      );
-      res.status(200).send(result);
+      const [rows] = await db.query("INSERT INTO area(nameArea) values (?)", [
+        req.body.nameArea,
+      ]);
+      db.end()
+      res.status(202).json("Informacion Agregada Correctamente")
     } else {
-      res.status(400).send("Error en el numero de telefono");
+      res.status(400).send("Error al procesar tu información");
     }
   } catch (error) {
-    if(error.errno === 1062)
-    {
-      res.status(400).send("No puedes ingresar el mismo numero")
-    }
-    else{
-      res.status(500).send("Error del servidor contactar a soporte")
-    }
-
+    console.log(error);
+    res.status(500).send("Error del servidor contactar a soporte");
   }
 };
+
+

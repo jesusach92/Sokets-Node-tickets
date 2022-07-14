@@ -27,7 +27,7 @@ export const validatorUserName = (text)=>{
  * @returns A function that takes a text parameter and returns a boolean.
  */
 export const validatorSimpleText = (text)=>{
-    const reg = /[0-9\.\,\"\?\!\;\:\#\$\%\&\(\)\*\+\-\/\<\>\=\@\[\]\\\^\_\{\}\|\~]+/
+    const reg = /[0-9\.\"\?\!\;\:\#\$\%\&\(\)\*\+\-\/\<\>\=\@\[\]\\\^\_\{\}\|\~]+/
     return !reg.test(text)
 }
 
@@ -59,5 +59,6 @@ export const validatorSerialNumber= (text)=>{
  */
 export const validatorPhoneNumber = (text)=>{
     const reg = /(\+?( |-|\.)?\d{1,2}( |-|\.)?)?(\(?\d{3}\)?|\d{3})( |-|\.)?(\d{3}( |-|\.)?\d{4})/
+    console.log(reg.test(text));
     return reg.test(text)
 }

@@ -41,9 +41,8 @@ export const DeleteSessionToken = (RefreshToken) => {
 export const verifyAuth = async (req, res, next) => {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(" ").pop()
-
-      const verifiy = await verifytoken(token)
-      if(verifiy){
+      const verify = await verifytoken(token)
+      if(verify){
           next();
       }
       else
@@ -72,7 +71,6 @@ export const verifyAuth = async (req, res, next) => {
     try {
       const token= req.headers.authorization.split(' ').pop()
       const tokenData = await verifytoken(token)
-      console.log(tokenData.user);
       const roleUser = tokenData.user?.fkRole
       if([].concat(role).includes(roleUser)){ next()}
       else{

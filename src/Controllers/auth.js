@@ -84,8 +84,9 @@ export const singCtrl = async (req, res) => {
           if (passEmploye) {
             const RefreshToken = await tokenRefresh({
               idUser: employe.fkUser,
-			        type: rows.fkUserType,
+			    type: rows.fkUserType,
               email: employe.emailEmploye,
+              fkRole: employe.fkRole
             });
             const token = await tokenSign({
               idUser: employe.fkUser,
@@ -132,26 +133,28 @@ export const RefreshToken = async (req, res) => {
       const validate = await verifyRefreshTokenMid(cookies.RefreshToken);
       if (validate) {
         const {user}=validate
-        const token = await tokenSign({idUser:user.idUser, email:user.email});
+        
         const db = await connect();
 		switch(user.type){
 			case 1:
+            const Consumertoken = await tokenSign({idUser:user.idUser, email:user.email});
 			const [[{nameConsumer, emailConsumer}]] = await db.query("SELECT nameConsumer, emailConsumer FROM consumers WHERE fkUser=?",[
 				user.idUser
 			])
-			updateToken(user.idUser, token)
+			updateToken(user.idUser, Consumertoken)
 			res.status(200).json({
-				token,type: user.type, nameUser:nameConsumer,email:emailConsumer
+				token: Consumertoken,type: user.type, nameUser:nameConsumer,email:emailConsumer
 			})
 			break;
 			case 2:
-		const [[{ nameEmploye, emailEmploye, numberEmploye, fkRole }]] =
+            const [[{ nameEmploye, emailEmploye, numberEmploye, fkRole }]] =
           await db.query("SELECT * FROM employes WHERE fkUser= ?", [
             user.idUser,
           ]);
-        updateToken(user.idUser, token);
+          const Employetoken = await tokenSign({idUser:user.idUser, email:user.email, fkRole:fkRole});
+        updateToken(user.idUser, Employetoken);
         res.status(200).json({
-          token,
+          token: Employetoken,
 		  type: user.type,
           nameUser: nameEmploye,
           email: emailEmploye,
