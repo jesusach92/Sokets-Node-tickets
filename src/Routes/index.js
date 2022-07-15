@@ -1,10 +1,10 @@
 import { Router } from "express";
 import fs from "fs"
 import agentRouter from "./agent.js";
+import AreasRouter from "./area.js";
 import authRouter from "./auth.js";
 import CategoryRouter from "./category.js";
 import ComputerRouter from "./computers.js";
-import configRouter from "./config.js";
 import consumersRouter from "./consumers.js";
 import employesRouter from "./employes.js";
 import phonesRouter from "./phones.js";
@@ -13,8 +13,8 @@ import ticketsRouter from "./tickets.js";
 
 const router  = Router();
 router.use("/agent", agentRouter);
+router.use("/area",AreasRouter)
 router.use("/auth",authRouter)
-router.use("/config", configRouter)
 router.use("/consumers",consumersRouter)
 router.use("/employes", employesRouter)
 router.use("/category",CategoryRouter)

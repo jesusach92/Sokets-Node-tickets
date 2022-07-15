@@ -1,11 +1,11 @@
 import { connect } from "../Config/database.js";
-import { error400, error404, error500, status202 } from "../Helpers/states.js";
+import { error400, error404, error500, stateDelete, status202 } from "../Helpers/states.js";
 import { validatorSimpleText } from "../Helpers/validatorData.js";
 
-export const getCategories = async (req, res) => {
+export const getAreas = async (req, res) => {
   try {
     const db = await connect();
-    const [rows] = await db.query("SELECT * FROM category;");
+    const [rows] = await db.query("SELECT * FROM area;");
     if (rows.length === 0) {
       error404(req, res)
     } else {
@@ -13,15 +13,15 @@ export const getCategories = async (req, res) => {
     }
     db.end();
   } catch (error) {
-    error500(req, res,error)
+    error500(req, res, error)
   }
 };
 
-export const getCategory = async (req, res) => {
+export const getArea = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query(
-      "SELECT * FROM category WHERE idCategory=?;",
+      "SELECT * FROM area WHERE idArea=?;",
       [req.params.id]
     );
     if (rows.length === 0) {
@@ -32,20 +32,19 @@ export const getCategory = async (req, res) => {
     db.end();
   } catch (error) {
     console.log(error);
-    error500(req, res,error)
+    error500(req, res, error)
   }
 };
 
-export const addCategory = async (req, res) => {
+export const addArea = async (req, res) => {
   try {
     if (
-      validatorSimpleText(req.body.nameCategory) &&
-      validatorSimpleText(req.body.Description)
+      validatorSimpleText(req.body.nameArea)
     ) {
       const db = await connect();
       const [rows] = await db.query(
-        "INSERT INTO category(nameCategory,Description) VALUES (?,?);",
-        [req.body.nameCategory, req.body.Description]
+        "INSERT INTO area(nameArea) VALUES (?);",
+        [req.body.nameArea]
       );
       db.end();
         status202(req, res)
@@ -54,20 +53,19 @@ export const addCategory = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    error500(req, res,error)
+    error500(req, res, error)
   }
 };
 
-export const putCategory = async (req, res) => {
+export const putArea = async (req, res) => {
   try {
     if (
-      validatorSimpleText(req.body.nameCategory) &&
-      validatorSimpleText(req.body.Description)
+      validatorSimpleText(req.body.nameArea)
     ) {
       const db = await connect();
       const [rows] = await db.query(
-        "UPDATE category SET nameCategory=?, Description=? WHERE idCategory=?;",
-        [req.body.nameCategory, req.body.Description, req.body.idCategory]
+        "UPDATE area SET nameArea=? WHERE idArea=?;",
+        [req.body.nameArea, req.body.idArea]
       );
       db.end();
       if (rows.affectedRows !== 0) {
@@ -79,23 +77,24 @@ export const putCategory = async (req, res) => {
         error400(req, res)
     }
   } catch (error) {
-    error500(req, res,error)
+    console.log(error);
+    error500(req, res, error, error)
   }
 };
 
-export const deleteCategory = async (req, res) => {
+export const deleteArea = async (req, res) => {
   try {
     const db = await connect();
-    const [rows] = await db.query("DELETE FROM category WHERE idCategory= ?", [
+    const [rows] = await db.query("DELETE FROM area WHERE idArea= ?", [
       req.params.id,
     ]);
     db.end();
     if (rows.affectedRows !== 0) {
-        status202(req, res)
+        stateDelete(req, res)
     } else {
         error400(req, res)
     }
   } catch (error) {
-    error500(req, res,error)
+    error500(req, res, error)
   }
 };

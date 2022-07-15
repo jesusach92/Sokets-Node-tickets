@@ -1,4 +1,5 @@
 import { connect } from "../Config/database.js";
+import { error400, error404, error500, status202 } from "../Helpers/states.js";
 import { validatorPhoneNumber } from "../Helpers/validatorData.js";
 
 
@@ -8,14 +9,14 @@ export const getPhones = async(req, res)=>{
         const [rows] = await db.query("SELECT * FROM phones;")
         if(rows.length === 0)
         {
-            res.status(404).send("No encontramos lo que buscabas")
+           error404(req, res)
         }
         else{
             res.status(200).json(rows)
         }
         db.end();
     } catch (error) {
-        res.status(500).send("Error del servidor contactar a Soporte")
+        error500(req, res)
     }
 }
 export const getPhone = async(req, res)=>{
@@ -26,7 +27,7 @@ export const getPhone = async(req, res)=>{
         ])
         if(rows.length === 0)
         {
-            res.status(404).send("No encontramos lo que buscabas")
+            error404(req, res)
         }
         else{
             res.status(200).json(rows)
@@ -34,7 +35,7 @@ export const getPhone = async(req, res)=>{
         db.end()
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error del servidor contactar a Soporte")
+        error500(req,res, error)
     }
 }
 
@@ -47,16 +48,16 @@ export const addPhone = async (req, res) => {
           "INSERT INTO phones (numberPhone, typeNumber, fkUser) VALUES (?,?,?);",
           [number, req.body.typeNumber, req.body.fkUser]
         );
-        res.status(200).send("Informacion Agregada Correctamente");
+       status202(req, res)
       } else {
-        res.status(400).send("Error en el numero de telefono");
+        error400(req, res)
       }
     } catch (error) {
       if (error.errno === 1062) {
-        res.status(400).send("No puedes ingresar el mismo número");
-      } else {
+    error400(req, res)  
+    } else {
         console.log(error);
-        res.status(500).send("Error del servidor contactar a soporte");
+        error500(req, res, error)
       }
     }
   };

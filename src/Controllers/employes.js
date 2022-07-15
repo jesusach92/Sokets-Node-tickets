@@ -1,8 +1,8 @@
 import { connect } from "../Config/database.js";
 import { passwordCrypt } from "../Helpers/BCryptPass.js";
+import { error500 } from "../Helpers/states.js";
 import {
   validatorEmail,
-  validatorSerialNumber,
   validatorUserName,
 } from "../Helpers/validatorData.js";
 
@@ -15,9 +15,10 @@ export const getEmployes = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query("SELECT * FROM employes;");
-    res.json(rows);
+    res.status(200).json(rows);
     db.end();
   } catch (error) {
+    error500(req, res)
     console.log(error);
   }
   
@@ -38,6 +39,7 @@ export const getEmploye = async (req, res) => {
     res.json(rows);
     db.end();
   } catch (error) {
+    error500(req, res)
     console.log(error);
   }
 };
@@ -75,7 +77,7 @@ export const addEmploye = async (req, res) => {
           passwordhash,
           req.body.fkRole,
         ]);
-        res.send(result);
+        res.status(200).send(result);
         db.end();
       } else {
         res.status(400).send("Email Invalido");
@@ -84,6 +86,7 @@ export const addEmploye = async (req, res) => {
       res.status(400).send("Nombre de Usuario Invalido");
     }
   } catch (error) {
+    error500(req, res)
     console.log(error);
   }
 };
@@ -117,7 +120,7 @@ export const updateEmploye = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error de sistema contacta a tu administrador")
+    error500(req, res)
   }
 };
 

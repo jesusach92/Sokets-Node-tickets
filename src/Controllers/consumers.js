@@ -5,6 +5,7 @@ import {
   validatorSimpleText,
 } from "../Helpers/validatorData.js";
 import { passwordCrypt } from "../Helpers/BCryptPass.js";
+import { error404, error500 } from "../Helpers/states.js";
 
 /**
  * It connects to the database, queries the database, and returns the results of the query.
@@ -15,10 +16,15 @@ export const getConsumers = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query("SELECT * FROM consumers;");
-    res.json(rows);
+    if(rows.length !==0){
+        res.status(202).json(rows);
+    }
+    else{
+        error404(req, res)
+    }
     db.end();
   } catch (error) {
-    res.send(404).send("Ha ocurrido un error")
+    error500(req, res)
     console.log(error);
   }
 };
@@ -36,11 +42,15 @@ export const getConsumer = async (req, res) => {
       "SELECT * FROM consumers WHERE idConsumer = ?;",
       [req.params.id]
     );
-    res.json(rows);
+    if(rows.length !==0){
+        res.status(202).json(rows);
+    }
+    else{
+        error404(req, res)
+    }
     db.end();
   } catch (error) {
-    res.send(404).send("Ha ocurrido un error")
-    console.log(error);
+   error500(req, res, error)
   }
 };
 
@@ -54,7 +64,7 @@ export const getConsumerById = async (fkUser)=>{
     return rows
     
   } catch (error) {
-    res.send(404).send("Ha ocurrido un error")
+    error500(req, res, error)
     console.log(error);
     return error
     
@@ -80,14 +90,13 @@ export const addConsumer = async (req, res) => {
         res.status(202).send(result);
         db.end();
       } else {
-        res.status(400).send("Correo Electronico no Valido");
+        error404(req, res)
       }
     } else {
-      res.status(400).send("Nombre no Valido");
+        error404(req, res)
     }
   } catch (error) {
-    res.send(404).send("Ha ocurrido un error")
-    console.log(error);
+   error500(req, res, error)
   }
 };
 
@@ -118,6 +127,7 @@ export const updateConsumer = async (req, res) => {
       res.status(400).send("Nombre no valido");
     }
   } catch (error) {
+    error500(req, res)
     console.log(error);
   }
 };
@@ -140,7 +150,7 @@ export const deleteUser = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("comunicate con tu administrador de sistema")
+    error500(req, res)
   }
 };
 
