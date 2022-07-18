@@ -1,64 +1,76 @@
 import { connect } from "../Config/database.js";
-import { error400, error404, error500, stateDelete, status202 } from "../Helpers/states.js";
+import {
+  error400,
+  error404,
+  error500,
+  stateDelete,
+  status202,
+} from "../Helpers/states.js";
 import { validatorSimpleText } from "../Helpers/validatorData.js";
 
-export const getCategories = async (req, res) => {
+export const getreassignments = async (req, res) => {
   try {
     const db = await connect();
-    const [rows] = await db.query("SELECT * FROM category;");
+    const [rows] = await db.query("SELECT * FROM reassignments;");
     if (rows.length === 0) {
-      error404(req, res)
+      error404(req, res);
     } else {
       res.status(200).json(rows);
     }
     db.end();
   } catch (error) {
-    error500(req, res,error)
+    error500(req, res, error);
   }
 };
 
-export const getCategory = async (req, res) => {
+export const getreassignment = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query(
-      "SELECT * FROM category WHERE idCategory=?;",
+      "SELECT * FROM reassignments WHERE idReassignment=?;",
       [req.params.id]
     );
     if (rows.length === 0) {
-      error404(req, res)
+      error404(req, res);
     } else {
       res.status(200).json(rows);
     }
     db.end();
   } catch (error) {
     console.log(error);
-    error500(req, res,error)
+    error500(req, res, error);
   }
 };
 
-export const addCategory = async (req, res) => {
+/**
+ * It's a function that receives a request and a response, and it's supposed to add a reassignment
+ * request to the database.
+ * @param req - request
+ * @param res - {
+ */
+export const addReassignment = async (req, res) => {
   try {
-    if (
-      validatorSimpleText(req.body.nameCategory) &&
-      validatorSimpleText(req.body.Description)
-    ) {
+    if (validatorSimpleText(req.body.commentsRe)) {
       const db = await connect();
-      const [rows] = await db.query(
-        "INSERT INTO category(nameCategory,Description) VALUES (?,?);",
-        [req.body.nameCategory, req.body.Description]
-      );
+      const [rows] = await db.query("Call ReassignmentRequest(?,?,?,?,?);", [
+        req.body.commentsRe,
+        req.body.requestDate,
+        req.body.agentProvider,
+        req.body.idTicket,
+        req.body.agentReciver,
+      ]);
       db.end();
-        status202(req, res)
+      status202(req, res);
     } else {
-      error404(req, res)
+      error404(req, res);
     }
   } catch (error) {
     console.log(error);
-    error500(req, res,error)
+    error500(req, res, error);
   }
 };
 
-export const putCategory = async (req, res) => {
+export const putReassignment = async (req, res) => {
   try {
     if (
       validatorSimpleText(req.body.nameCategory) &&
@@ -71,15 +83,15 @@ export const putCategory = async (req, res) => {
       );
       db.end();
       if (rows.affectedRows !== 0) {
-        status202(req, res)
+        status202(req, res);
       } else {
-    error404(req, res)    
-    }
+        error404(req, res);
+      }
     } else {
-        error400(req, res)
+      error400(req, res);
     }
   } catch (error) {
-    error500(req, res,error)
+    error500(req, res, error);
   }
 };
 
@@ -91,11 +103,11 @@ export const deleteCategory = async (req, res) => {
     ]);
     db.end();
     if (rows.affectedRows !== 0) {
-        stateDelete(req, res)
+      stateDelete(req, res);
     } else {
-        error400(req, res)
+      error400(req, res);
     }
   } catch (error) {
-    error500(req, res,error)
+    error500(req, res, error);
   }
 };

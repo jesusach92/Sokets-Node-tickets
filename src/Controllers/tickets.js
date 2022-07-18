@@ -77,11 +77,28 @@ export const getTicketByUser = async (req, res) => {
   }
 };
 
+export const getTicketByArea = async (req, res)=>{
+    try {
+        const db = await connect();
+        const [rows] = await db.query("SELECT * FROM tickets WHERE fkArea=?;", [
+          req.params.id,
+        ]);
+        if (rows.length === 0) {
+          error404(req, res);
+        } else {
+          res.status(200).json(rows);
+        }
+        db.end();
+      } catch (error) {
+        console.log(error);
+        error500(req, res);
+      }
+    }
+
 export const addTicket = async (req, res) => {
   try {
     const db = await connect();
     const dataObjet = new Date(req.body.dateticket * 1000);
-    console.log(req.body.dateticket);
     const [[rows]] = await db.query("Call InTicket(?,?,?,?,?,?,?,?,?)", [
       dataObjet,
       req.body.subjectTicket,
@@ -94,7 +111,6 @@ export const addTicket = async (req, res) => {
       dataObjet,
     ]);
     status202(req, res);
-    console.log(rows);
     db.end();
   } catch (error) {
     console.log(error);
@@ -102,7 +118,25 @@ export const addTicket = async (req, res) => {
   }
 };
 
-export const putTicket = async (req, res) => {};
+export const putTicket = async (req, res) => {
+try {
+    const db= await connect()
+    const dataObjet =  new Date(req.body.deleteTicket * 1000);
+    const [rows]= await db.query("UPDATE tickets SET fkArea=?, fkCategory=?, Priority=?, dateUpdate=? WHERE idTicket=?",[
+        req.body.fkArea,
+        req.body.fkCategory,
+        req.body.Priority,
+        dataObjet,
+        req.body.idTicket
+    ])
+    status202(req, res)
+    db.end()
+} catch (error) {
+    error500(req, res, error)
+}
+
+};
+
 export const deleteTicket = async (req, res) => {
   try {
     const db = await connect();

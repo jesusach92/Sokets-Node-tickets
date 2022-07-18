@@ -1,4 +1,5 @@
 import { verifytoken, verifyRefreshToken } from "../Helpers/generateToken.js";
+import { error500 } from "../Helpers/states.js";
 
 /**
  * It checks if the request has an authorization header, if it does, it splits the header into an
@@ -77,7 +78,7 @@ export const verifyAuth = async (req, res, next) => {
       res.status(403).send("Recurso no autorizado")
       }
     } catch (error) {
-      res.status(500).send("Error de Servidor Contactar a soporte")
+     error500(req, res, error)
     }
   
   };

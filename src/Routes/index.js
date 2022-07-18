@@ -1,5 +1,6 @@
 import { Router } from "express";
 import fs from "fs"
+import { verifyAuth, verifySession } from "../Middleweres/auth.js";
 import agentRouter from "./agent.js";
 import AreasRouter from "./area.js";
 import authRouter from "./auth.js";
@@ -8,19 +9,26 @@ import ComputerRouter from "./computers.js";
 import consumersRouter from "./consumers.js";
 import employesRouter from "./employes.js";
 import phonesRouter from "./phones.js";
+import reassignmentRouter from "./reassignments.js";
+import RoleRouter from "./roles.js";
 import ticketsRouter from "./tickets.js";
+import UserTypeRouter from "./usertypes.js";
 
 
 const router  = Router();
+router.use("/auth",authRouter)
+// router.use("/",verifyAuth,verifySession)
 router.use("/agent", agentRouter);
 router.use("/area",AreasRouter)
-router.use("/auth",authRouter)
 router.use("/consumers",consumersRouter)
 router.use("/employes", employesRouter)
 router.use("/category",CategoryRouter)
 router.use("/computers", ComputerRouter)
 router.use("/phones", phonesRouter)
 router.use("/tickets",ticketsRouter)
+router.use("/roles", RoleRouter)
+router.use("/usertypes", UserTypeRouter)
+router.use("/reassignments", reassignmentRouter)
 // router.use("/upload",)
 
 

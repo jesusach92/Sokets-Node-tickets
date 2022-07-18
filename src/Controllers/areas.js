@@ -46,8 +46,8 @@ export const addArea = async (req, res) => {
         "INSERT INTO area(nameArea) VALUES (?);",
         [req.body.nameArea]
       );
-      db.end();
-        status202(req, res)
+    db.end();
+    status202(req, res)
     } else {
       error404(req, res)
     }

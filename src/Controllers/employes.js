@@ -69,13 +69,14 @@ export const addEmploye = async (req, res) => {
       if (validatorEmail(req.body.emailEmploye)) {
         const db = await connect();
         const passwordhash = await passwordCrypt(req.body.passwordEmploye);
-        const [[result]] = await db.query("CALL InEmploye(?,?,?,?,?,?);", [
+        const [[result]] = await db.query("CALL InEmploye(?,?,?,?,?,?,?);", [
           req.body.userName,
           req.body.nameEmploye,
           req.body.emailEmploye,
           req.body.numberEmploye,
           passwordhash,
           req.body.fkRole,
+          req.body.titleJob
         ]);
         res.status(200).send(result);
         db.end();

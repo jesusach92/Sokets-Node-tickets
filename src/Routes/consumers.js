@@ -1,22 +1,16 @@
 import { Router } from "express";
-import {
-  addConsumer,
-  deleteUser,
-  getConsumer,
-  getConsumers,
-  updateConsumer,
-} from "../Controllers/consumers.js";
-import { verifiyRole, verifyAuth } from "../Middleweres/auth.js";
+import { addConsumer,deleteUser,getConsumer,getConsumers,updateConsumer} from "../Controllers/consumers.js";
+import { verifiyRole, } from "../Middleweres/auth.js";
 const consumersRouter = Router();
 
-consumersRouter.get("/", verifyAuth, verifiyRole([2,3,4,5]) , getConsumers);
+consumersRouter.get("/", verifiyRole([2, 3, 4, 5]), getConsumers);
 
-consumersRouter.get("/:id",verifyAuth, verifiyRole([2,3,4,5]), getConsumer);
+consumersRouter.get("/:id", verifiyRole([2, 3, 4, 5]), getConsumer);
 
-consumersRouter.post("/", addConsumer);
+consumersRouter.post("/", verifiyRole([2, 3, 4, 5]), addConsumer);
 
-consumersRouter.put("/",verifyAuth, verifiyRole([2,3,4,5]), updateConsumer);
+consumersRouter.put("/", verifiyRole([2, 4, 5]), updateConsumer);
 
-consumersRouter.delete("/:id",verifyAuth, verifiyRole([2,3,4,5]), deleteUser);
+consumersRouter.delete("/:id",verifiyRole([4, 5]),deleteUser);
 
 export default consumersRouter;

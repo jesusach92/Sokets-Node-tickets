@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { addPhone, deletePhone, getPhone, getPhones, updatePhone } from "../Controllers/phones.js";
-import { verifyAuth } from "../Middleweres/auth.js";
+import {verifiyRole, verifySession } from "../Middleweres/auth.js";
 
 const phonesRouter = Router()
 
-phonesRouter.get("/",verifyAuth ,getPhones)
-phonesRouter.get("/:id",verifyAuth ,getPhone)
+phonesRouter.get("/",verifiyRole([2,3,4,5]) ,getPhones)
+phonesRouter.get("/:id",verifiyRole([2,3,4,5]),getPhone)
 phonesRouter.post("/",addPhone)
-phonesRouter.put("/", verifyAuth,updatePhone)
-phonesRouter.delete("/:id",verifyAuth ,deletePhone)
+phonesRouter.put("/",updatePhone)
+phonesRouter.delete("/:id",deletePhone)
 
 
 export default phonesRouter
