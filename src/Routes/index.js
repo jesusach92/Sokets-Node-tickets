@@ -17,7 +17,7 @@ import UserTypeRouter from "./usertypes.js";
 
 const router  = Router();
 router.use("/auth",authRouter)
-// router.use("/",verifyAuth,verifySession)
+router.use("/",verifyAuth,verifySession)
 router.use("/agent", agentRouter);
 router.use("/area",AreasRouter)
 router.use("/consumers",consumersRouter)

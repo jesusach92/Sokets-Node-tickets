@@ -38,8 +38,8 @@ export const addAgent = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query(
-      "INSERT INTO agents(principalAgent, fkEmploye, fkArea) VALUES (?,?,?);",
-      [req.body.principalAgent, req.body.fkEmploye, req.body.fkArea]
+      "INSERT INTO agents(rangeAgent, fkEmploye, fkArea) VALUES (?,?,?);",
+      [req.body.rangeAgent, req.body.fkEmploye, req.body.fkArea]
     );
     db.end();
     status202(req, res);
@@ -53,8 +53,8 @@ export const updateAgent = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query(
-      "UPDATE agents SET principalAgent=?, fkArea=? WHERE idAgent=?;",
-      [req.body.principalAgent, req.body.fkArea, req.body.idAgent]
+      "UPDATE agents SET rangeAgent=?, fkArea=? WHERE idAgent=?;",
+      [req.body.rangeAgent, req.body.fkArea, req.body.idAgent]
     );
     db.end();
     if (rows.affectedRows !== 0) {
