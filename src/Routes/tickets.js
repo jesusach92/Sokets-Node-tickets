@@ -4,13 +4,13 @@ import { verifiyRole } from "../Middleweres/auth.js";
 
 const ticketsRouter = Router()
 
+ticketsRouter.get("/user/:id", getTicketByUser)
+
 ticketsRouter.get("/", verifiyRole([2,3,4,5]),getTickets)
 
 ticketsRouter.get("/:id",verifiyRole([2,3,4,5]),getTicket)
 
 ticketsRouter.get("/agent/:id",verifiyRole([2,3,4,5]), getTicketByAgent)
-
-ticketsRouter.get("/user/:id", getTicketByUser)
 
 ticketsRouter.get("/area/:id",verifiyRole([2,3,4,5]), getTicketByArea)
 

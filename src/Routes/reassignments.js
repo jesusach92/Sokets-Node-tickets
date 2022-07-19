@@ -3,7 +3,7 @@ import { addReassignment, getreassignment, getreassignments } from "../Controlle
 import {verifiyRole} from "../Middleweres/auth.js"
 const reassignmentRouter = Router();
 
-//reassignmentRouter.use("/", verifiyRole([4,5]))
+reassignmentRouter.use("/", verifiyRole([4,5]))
 
 reassignmentRouter.get("/", getreassignments)
 
