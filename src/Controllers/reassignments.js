@@ -78,7 +78,7 @@ export const putReassignment = async (req, res) => {
     ) {
       const db = await connect();
       const [rows] = await db.query(
-        "UPDATE category SET nameCategory=?, Description=? WHERE idCategory=?;",
+        "call ReassignmentUpdate(?,?,?,?);",
         [req.body.nameCategory, req.body.Description, req.body.idCategory]
       );
       db.end();

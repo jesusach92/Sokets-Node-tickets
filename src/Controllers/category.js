@@ -36,6 +36,24 @@ export const getCategory = async (req, res) => {
   }
 };
 
+export const getCategoriesByArea = async(req, res)=>{
+    try {
+        const db=  await connect();
+        const [rows] = await db.query("SELECT * FROM category WHERE fkArea=?",[
+        req.params.id
+        ])
+        if(rows.length>0)
+        {
+            res.status(200).json(rows)
+        }
+        else{
+            error404(req, res)
+        }
+    } catch (error) {
+    error500(req, res, error)        
+    }
+}
+
 export const addCategory = async (req, res) => {
   try {
     if (
