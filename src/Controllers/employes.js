@@ -69,14 +69,15 @@ export const addEmploye = async (req, res) => {
       if (validatorEmail(req.body.emailEmploye)) {
         const db = await connect();
         const passwordhash = await passwordCrypt(req.body.passwordEmploye);
-        const [[result]] = await db.query("CALL InEmploye(?,?,?,?,?,?,?);", [
+        const [[result]] = await db.query("CALL InEmploye(?,?,?,?,?,?,?,?);", [
           req.body.userName,
           req.body.nameEmploye,
           req.body.emailEmploye,
           req.body.numberEmploye,
           passwordhash,
           req.body.fkRole,
-          req.body.titleJob
+          req.body.titleJob,
+          req.body.fkArea
         ]);
         res.status(200).send(result);
         db.end();
@@ -103,13 +104,16 @@ export const updateEmploye = async (req, res) => {
       if (validatorEmail(req.body.emailEmploye)) {
         const db = await connect();
         const passwordhash = await passwordCrypt(req.body.passwordEmploye);
-        const [[result]] = await db.query("CALL UpdateEmploye(?,?,?,?,?,?)", [
+        const [[result]] = await db.query("CALL UpdateEmploye(?,?,?,?,?,?,?,?)", [
           req.body.idemploye,
           req.body.userName,
           req.body.nameEmploye,
           req.body.emailEmploye,
           passwordhash,
           req.body.fkRole,
+          req.body.JobTitle,
+          req.body.fkArea
+
         ]);
         res.send(result);
         db.end();

@@ -38,10 +38,10 @@ export const addAgent = async (req, res) => {
   try {
     let Range = req.body.rangeAgent
     const db = await connect();
-    const [[{ADMIN}]]= await db.query("SELECT Count(*) AS ADMIN FROM agents WHERE fkArea=? AND rangeAgent=1",[
+    const [[{ADMIN}]]= await db.query("SELECT Count(*) AS ADMIN FROM agents WHERE fkArea=? AND (rangeAgent=1 OR rangeAgent=2);",[
        req.body.fkArea 
     ])
-     if(ADMIN === 1 && Range === 1)Range = 3;
+     if(ADMIN > 0 && (Range === 1 || Range ===2))Range = 3;
     const [rows] = await db.query(
       "INSERT INTO agents(rangeAgent, fkEmploye, fkArea) VALUES (?,?,?);",
       [Range, req.body.fkEmploye, req.body.fkArea]
@@ -56,25 +56,10 @@ export const addAgent = async (req, res) => {
 
 export const updateAgent = async (req, res) => {
   try {
-    let Range = req.body.rangeAgent
-    const db = await connect();
-    const [agents]= await db.query("SELECT * FROM agents WHERE fkArea=?;",[
-    req.body.fkArea])
-    for (let index = 0; index < agents.length; index++) {
-        const element = agents[index];
-       console.log( element.rangeAgent);
-        
-    }
-    // const [rows] = await db.query(
-    //   "UPDATE agents SET rangeAgent=?, fkArea=? WHERE idAgent=?;",
-    //   [Range, req.body.fkArea, req.body.idAgent]
-    // );
-    // db.end();
-    // if (rows.affectedRows !== 0) {
-    //   status202(req, res);
-    // } else {
-    //   error400(req, res);
-    // }
+    const db= await connect()
+    const [rows]= await db.query("UPDATE agents SET fkEmploye=? WHERE idAgent=?",[
+        req.body.fkEmploye,
+        req.body.idAgent])
   } catch (error) {
     console.log(error);
     error500(req, res, error);

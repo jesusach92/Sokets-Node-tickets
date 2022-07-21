@@ -73,20 +73,21 @@ export const addReassignment = async (req, res) => {
 export const putReassignment = async (req, res) => {
   try {
     if (
-      validatorSimpleText(req.body.nameCategory) &&
-      validatorSimpleText(req.body.Description)
+
+      validatorSimpleText(req.body.comments)
     ) {
       const db = await connect();
       const [rows] = await db.query(
         "call ReassignmentUpdate(?,?,?,?);",
-        [req.body.nameCategory, req.body.Description, req.body.idCategory]
+        [
+        req.body.comments, 
+        req.body.statusIn,
+        req.body.responseDate,
+        req.body.reassignmentId
+    ]
       );
       db.end();
-      if (rows.affectedRows !== 0) {
-        status202(req, res);
-      } else {
-        error404(req, res);
-      }
+        status202(req, res)
     } else {
       error400(req, res);
     }
