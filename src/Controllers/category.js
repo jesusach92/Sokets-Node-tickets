@@ -62,8 +62,8 @@ export const addCategory = async (req, res) => {
     ) {
       const db = await connect();
       const [rows] = await db.query(
-        "INSERT INTO category(nameCategory,Description) VALUES (?,?);",
-        [req.body.nameCategory, req.body.Description]
+        "INSERT INTO category(nameCategory,Description, fkArea) VALUES (?,?,?);",
+        [req.body.nameCategory, req.body.Description, req.body.fkArea]
       );
       db.end();
         status202(req, res)

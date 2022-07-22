@@ -40,6 +40,7 @@ export const DeleteSessionToken = (RefreshToken) => {
 };
 
 export const verifyAuth = async (req, res, next) => {
+
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(" ").pop()
       const verify = await verifytoken(token)
