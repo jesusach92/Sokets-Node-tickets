@@ -68,7 +68,7 @@ export const addCategory = async (req, res) => {
       db.end();
         status202(req, res)
     } else {
-      error404(req, res)
+      error400(req, res)
     }
   } catch (error) {
     console.log(error);

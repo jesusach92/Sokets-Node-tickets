@@ -2,13 +2,15 @@ import { Router } from "express";
 import { Logout, RefreshToken, singCtrl } from "../Controllers/auth.js";
 const authRouter = Router();
 
+authRouter.get("/", RefreshToken);
 
 /* A route that is being created. */
-authRouter.post("/login", singCtrl);
 
-authRouter.get("/update", RefreshToken);
+authRouter.post("/", singCtrl);
 
-authRouter.put("/logout",Logout)
+
+
+authRouter.put("/",Logout)
 
 
 

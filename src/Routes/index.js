@@ -17,12 +17,12 @@ import UserTypeRouter from "./usertypes.js";
 
 const router  = Router();
 router.use("/auth",authRouter)
-router.use("/",verifyAuth,/*verifySession*/)
-router.use("/agent", agentRouter);
-router.use("/area",AreasRouter)
+router.use("/",verifyAuth,verifySession)
+router.use("/agents", agentRouter);
+router.use("/areas",AreasRouter)
 router.use("/consumers",consumersRouter)
 router.use("/employes", employesRouter)
-router.use("/category",CategoryRouter)
+router.use("/categories",CategoryRouter)
 router.use("/computers", ComputerRouter)
 router.use("/phones", phonesRouter)
 router.use("/tickets",ticketsRouter)

@@ -15,6 +15,6 @@ app.use(cors({
     
 }));
 app.use(morgan("dev"));
-app.use(router);
+app.use("/Api/v1",router);
 
 export default app;

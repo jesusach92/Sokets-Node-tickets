@@ -67,6 +67,7 @@ export const singCtrl = async (req, res) => {
               })
               .json({
                 token,
+                idUser: consumer.fkUser,
                 type: rows.fkUserType,
                 nameUser: consumer.nameConsumer,
                 email: consumer.emailConsumer,
@@ -102,6 +103,7 @@ export const singCtrl = async (req, res) => {
               })
               .json({
                 token,
+                idUser: employe.fkUser,
                 type: rows.fkUserType,
                 nameUser: employe.nameEmploye,
                 email: employe.emailEmploye,
@@ -148,6 +150,7 @@ export const RefreshToken = async (req, res) => {
             updateToken(user.idUser, Consumertoken);
             res.status(200).json({
               token: Consumertoken,
+              idUser: user.idUser,
               type: user.type,
               nameUser: nameConsumer,
               email: emailConsumer,
@@ -166,6 +169,7 @@ export const RefreshToken = async (req, res) => {
             updateToken(user.idUser, Employetoken);
             res.status(200).json({
               token: Employetoken,
+              idUser: user.idUser,
               type: user.type,
               nameUser: nameEmploye,
               email: emailEmploye,
