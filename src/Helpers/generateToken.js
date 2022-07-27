@@ -34,7 +34,7 @@ export const tokenSign = async (user) => {
       },
       process.env.PASS_JWT,
       {
-        expiresIn: "1h",
+        expiresIn: "60s",
       }
     );
     return token;

@@ -98,8 +98,8 @@ export const getTicketByArea = async (req, res)=>{
 export const addTicket = async (req, res) => {
   try {
     const db = await connect();
-    const dataObjet = new Date(req.body.dateticket * 1000);
-    const [[agentFK]] = await db.query("SELECT idAgent FROM agents WHERE fkArea = ? AND rangeAgent=1;",[req.body.areaFk])
+    const dataObjet = new Date(req.body.dateticket);
+    const [[agentFK]] = await db.query("SELECT idAgent FROM agents JOIN employes ON idemploye=fkEmploye WHERE fkArea = ? AND rangeAgent=0;",[req.body.areaFk])
     const [[rows]] = await db.query("Call InTicket(?,?,?,?,?,?,?,?);", [
       dataObjet,
       req.body.subjectTicket,

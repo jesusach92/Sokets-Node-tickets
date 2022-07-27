@@ -49,6 +49,7 @@ export const verifyAuth = async (req, res, next) => {
       }
       else
       {
+        console.log("Hola")
           res.status(403).send("Token Invalido")
       }
     } else {

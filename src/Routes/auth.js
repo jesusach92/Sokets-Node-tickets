@@ -4,13 +4,10 @@ const authRouter = Router();
 
 authRouter.get("/", RefreshToken);
 
-/* A route that is being created. */
-
 authRouter.post("/", singCtrl);
 
 
-
-authRouter.put("/",Logout)
+authRouter.delete("/",Logout)
 
 
 
