@@ -49,8 +49,7 @@ export const verifyAuth = async (req, res, next) => {
       }
       else
       {
-        console.log("Hola")
-          res.status(403).send("Token Invalido")
+          res.status(401).send("Token Invalido")
       }
     } else {
       res.status(403).json({ value: "No Autorizado" }).end();

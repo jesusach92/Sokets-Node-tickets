@@ -1,12 +1,12 @@
 import { connect } from "../Config/database.js";
-import { error400, error404, error500, status202 } from "../Helpers/states.js";
+import { error400, error404, error500, status202, status204 } from "../Helpers/states.js";
 
 export const getAgents = async (req, res) => {
   try {
     const db = await connect();
     const [rows] = await db.query("SELECT * FROM agents;");
     if (rows.length === 0) {
-      error404(req, res);
+      status204(req, res);
     } else {
       res.status(200).json(rows);
     }
@@ -23,7 +23,7 @@ export const getAgent = async (req, res) => {
       req.params.id,
     ]);
     if (rows.length === 0) {
-      error404(req, res);
+      status204(req, res);
     } else {
       res.status(200).json(rows);
     }
@@ -74,7 +74,7 @@ export const deleteAgent = async (req, res) => {
     ]);
     db.end();
     if (rows.affectedRows !== 0) {
-      status202(req, res);
+      statusDelete(req, res);
     } else {
       error400(req, res);
     }

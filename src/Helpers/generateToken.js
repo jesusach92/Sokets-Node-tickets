@@ -18,7 +18,7 @@ export const tokenRefresh = async (user) => {
       },
       process.env.PASS_JWT_REFRESH,
       {
-        expiresIn: "24h",
+        expiresIn: "48h",
       }
     );
     return RefreshToken;
@@ -34,7 +34,7 @@ export const tokenSign = async (user) => {
       },
       process.env.PASS_JWT,
       {
-        expiresIn: "60s",
+        expiresIn: "1h",
       }
     );
     return token;

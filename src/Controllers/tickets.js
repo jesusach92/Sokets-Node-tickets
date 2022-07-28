@@ -5,6 +5,7 @@ import {
   error500,
   stateDelete,
   status202,
+  status204,
 } from "../Helpers/states.js";
 
 export const getTickets = async (req, res) => {
@@ -12,7 +13,7 @@ export const getTickets = async (req, res) => {
     const db = await connect();
     const [rows] = await db.query("SELECT * FROM tickets;");
     if (rows.length === 0) {
-      error404(req, res);
+      status204(req, res);
     } else {
       res.status(200).json(rows);
     }
@@ -30,7 +31,7 @@ export const getTicket = async (req, res, next) => {
       req.params.id,
     ]);
     if (rows.length === 0) {
-      error404(req, res);
+      status204(req, res);
     } else {
       res.status(200).json(rows);
     }
@@ -48,7 +49,7 @@ export const getTicketByAgent = async (req, res) => {
       req.params.id,
     ]);
     if (rows.length === 0) {
-      error404(req, res);
+      status204(req, res);
     } else {
       res.status(200).json(rows);
     }
@@ -62,11 +63,11 @@ export const getTicketByAgent = async (req, res) => {
 export const getTicketByUser = async (req, res) => {
   try {
     const db = await connect();
-    const [rows] = await db.query("SELECT * FROM tickets WHERE fkUser=?;", [
+    const [rows] = await db.query("SELECT * FROM ticketsview WHERE fkUser=?;", [
       req.params.id,
     ]);
     if (rows.length === 0) {
-      error404(req, res);
+      status204(req, res);
     } else {
       res.status(200).json(rows);
     }
@@ -84,7 +85,7 @@ export const getTicketByArea = async (req, res)=>{
           req.params.id,
         ]);
         if (rows.length === 0) {
-          error404(req, res);
+          status204(req, res);
         } else {
           res.status(200).json(rows);
         }

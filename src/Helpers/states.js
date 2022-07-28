@@ -16,6 +16,10 @@ export const status202 = (req, res)=>{
     res.status(202).send("Informacion agregada correctamente")
 }
 
+export const status204 = (req, res)=>{
+    res.status(204).send("No hay información de lo que buscas")
+}
+
 export const stateDelete = (req, res)=>{
     res.status(202).send("Borrado con exito")
 }
